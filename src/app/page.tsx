@@ -1,9 +1,26 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [backendValue, setBackendValue] = useState<string>("");
+  const frontendValue = process.env.NEXT_PUBLIC_TEST_FRONTEND_VALUE || "";
+
+  useEffect(() => {
+    fetch("/api/test-value")
+      .then((res) => res.json())
+      .then((data) => setBackendValue(data.value || ""));
+  }, []);
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        {/* Test connection and env values */}
+        <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-900">
+          <div><strong>Backend value from .env:</strong> {backendValue}</div>
+          <div><strong>Frontend value from .env:</strong> {frontendValue}</div>
+        </div>
         <Image
           className="dark:invert"
           src="/next.svg"
