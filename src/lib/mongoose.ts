@@ -1,4 +1,3 @@
-// lib/mongoose.ts
 import mongoose from "mongoose";
 
 const MONGO_URI = process.env.MONGO_URI as string;
@@ -6,8 +5,6 @@ const MONGO_URI = process.env.MONGO_URI as string;
 if (!MONGO_URI) {
   throw new Error("Please define the MONGO_URI environment variable.");
 }
-
-// Correct type: typeof mongoose instead of Connection
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
