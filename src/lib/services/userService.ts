@@ -1,5 +1,6 @@
 import { User, IUser } from "@/lib/models/User"
 import { dbConnect } from "@/lib/mongoose"
+import { Auth0User } from "@/lib/types/Auth0User"
 
 export async function findOrCreateUser(auth0User: Auth0User): Promise<IUser> {
   await dbConnect();
@@ -18,10 +19,4 @@ export async function findOrCreateUser(auth0User: Auth0User): Promise<IUser> {
   }
 
   return user;
-}
-
-interface Auth0User {
-  sub: string;
-  name?: string;
-  email?: string;
 }
