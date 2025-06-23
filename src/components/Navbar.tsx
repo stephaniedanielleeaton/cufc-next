@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 "use client";
 
 import { useState } from "react";
@@ -18,7 +17,7 @@ export default function Navbar() {
         <button onClick={() => setMenuOpen(true)}>
           <Menu size={28} />
         </button>
-        <div className="text-lg font-bold">CUFC</div>
+        <Image src="/LogoAllWhite.svg" alt="CUFC Logo" width={100} height={40} />
         <Image src="/pride-flag.svg" alt="Pride" width={28} height={28} />
       </nav>
 
@@ -41,9 +40,8 @@ export default function Navbar() {
       {/* Desktop Nav */}
       <div className="hidden md:block fixed top-0 left-0 w-full z-40">
         {/* Top Bar */}
-        <div className="h-[70px] bg-[#182A3A] text-white flex items-center justify-between px-6 font-khula">
+        <div className="h-[70px] bg-[#182A3A] text-white flex items-center justify-between px-12 font-khula">
           <Image src="/pride-flag.svg" alt="Pride" width={32} height={32} />
-
           {user ? (
             <Link href="/profile" className="flex items-center gap-2">
               <span>Profile</span>
@@ -71,8 +69,8 @@ export default function Navbar() {
         </div>
 
         {/* Bottom White Band */}
-        <div className="bg-white h-[60px] border-b px-6 flex items-center justify-between font-khula text-[#182A3A]">
-          <div className="text-xl font-bold">CUFC</div>
+        <div className="bg-white min-h-[80px] py-3 border-b px-12 flex items-center justify-between font-khula text-[#182A3A]">
+          <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={140} height={50} />
           <div className="flex gap-6">
             <Link href="/" className="hover:underline">Home</Link>
             <Link href="/about" className="hover:underline">About</Link>
