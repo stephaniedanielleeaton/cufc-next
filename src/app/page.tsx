@@ -27,7 +27,7 @@ export default function Home() {
           <div><strong>Frontend value from .env:</strong> {frontendValue}</div>
         </div>
 
-        <div className="bg-navy">
+        <div className="bg-medium-pink p-4 border rounded">
         Hi
       </div>
 
