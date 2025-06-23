@@ -27,6 +27,10 @@ export default function Home() {
           <div><strong>Frontend value from .env:</strong> {frontendValue}</div>
         </div>
 
+        <div className="bg-navy">
+        Hi
+      </div>
+
         <div className="p-4 border rounded bg-gray-50 dark:bg-gray-900 w-full max-w-md mb-4">
           <strong>Auth0 User State:</strong>
           {isLoading ? (

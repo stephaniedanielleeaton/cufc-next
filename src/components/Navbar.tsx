@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <>
       {/* Mobile Nav */}
-      <nav className="md:hidden fixed top-0 left-0 w-full h-[70px] bg-[#182A3A] text-white flex items-center justify-between px-4 font-khula z-50">
+      <nav className="md:hidden fixed top-0 left-0 w-full h-[70px] bg-navy text-white flex items-center justify-between px-4 font-khula z-50">
         <button onClick={() => setMenuOpen(true)}>
           <Menu size={28} />
         </button>
@@ -23,7 +23,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {menuOpen && (
-        <div className="fixed inset-0 bg-[#182A3A]/90 z-50 text-white flex flex-col items-center justify-center space-y-8 font-khula text-xl">
+        <div className="fixed inset-0 bg-navy/90 z-50 text-white flex flex-col items-center justify-center space-y-8 font-khula text-xl">
           <button
             onClick={() => setMenuOpen(false)}
             className="absolute top-4 right-4"
@@ -40,7 +40,7 @@ export default function Navbar() {
       {/* Desktop Nav */}
       <div className="hidden md:block fixed top-0 left-0 w-full z-40">
         {/* Top Bar */}
-        <div className="h-[70px] bg-[#182A3A] text-white flex items-center justify-between px-12 font-khula">
+        <div className="h-[70px] bg-navy text-white flex items-center justify-between px-12 font-khula">
           <Image src="/pride-flag.svg" alt="Pride" width={32} height={32} />
           {user ? (
             <Link href="/profile" className="flex items-center gap-2">
