@@ -23,15 +23,6 @@ export default function Home() {
       <Navbar />
       <div className="flex flex-col items-center justify-center min-h-screen p-8 gap-8 font-sans mt-[130px]">
         <div className="p-4 border rounded bg-gray-50 dark:bg-gray-900 w-full max-w-md mb-4">
-          <div><strong>Backend value from .env:</strong> {backendValue}</div>
-          <div><strong>Frontend value from .env:</strong> {frontendValue}</div>
-        </div>
-
-        <div className="bg-medium-pink p-4 border rounded">
-        Hello
-      </div>
-
-        <div className="p-4 border rounded bg-gray-50 dark:bg-gray-900 w-full max-w-md mb-4">
           <strong>Auth0 User State:</strong>
           {isLoading ? (
             <div>Loading...</div>
