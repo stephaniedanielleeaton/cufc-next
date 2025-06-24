@@ -1,6 +1,6 @@
 // src/app/profile/page.tsx
 
-import { auth0 } from "@/lib/auth0";
+import { auth0 } from "@/lib/auth/auth0";
 import { dbConnect } from "@/lib/mongoose";
 import { MemberProfile } from "@/lib/models/MemberProfile";
 import ProfileForm, { MemberProfileFormInput } from "@/components/ProfileForm";

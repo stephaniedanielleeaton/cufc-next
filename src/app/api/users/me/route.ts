@@ -1,7 +1,7 @@
 // app/api/users/me/route.ts
 
 import { NextResponse } from "next/server";
-import { auth0 } from "@/lib/auth0";
+import { auth0 } from "@/lib/auth/auth0";
 import { dbConnect } from "@/lib/mongoose";
 import { findOrCreateUser } from "@/lib/services/userService";
 import { findOrCreateMemberProfile } from "@/lib/services/memberProfileService";
