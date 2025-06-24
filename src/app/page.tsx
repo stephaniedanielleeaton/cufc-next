@@ -28,7 +28,7 @@ export default function Home() {
         </div>
 
         <div className="bg-medium-pink p-4 border rounded">
-        Hi
+        Hello
       </div>
 
         <div className="p-4 border rounded bg-gray-50 dark:bg-gray-900 w-full max-w-md mb-4">
