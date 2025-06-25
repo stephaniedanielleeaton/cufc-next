@@ -63,14 +63,29 @@ export default function Navbar() {
   return (
     <>
       {/* Mobile Nav */}
-      <nav className="md:hidden fixed top-0 left-0 w-full h-[70px] bg-navy text-white flex items-center justify-between px-4 font-khula z-50">
+      <nav className="md:hidden fixed top-0 left-0 w-full h-[70px] bg-navy text-white flex items-center justify-between px-4 font-khula z-50 relative">
         <button onClick={() => setMenuOpen(true)}>
           <Menu size={28} />
         </button>
-        <Link href="/">
+        <Link
+          href="/"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ display: "block" }}
+        >
           <Image src="/LogoAllWhite.svg" alt="CUFC Logo" width={100} height={40} />
         </Link>
-        <Image src="/pride-flag.svg" alt="Pride" width={28} height={28} />
+        <div className="flex items-center gap-2">
+          <Image src="/pride-flag.svg" alt="Pride" width={28} height={28} />
+          {user && (
+            <Link href="/profile" className="block md:hidden ml-2">
+              {user.picture ? (
+                <Image src={user.picture} alt="User Profile" width={32} height={32} className="rounded-full hover:ring-2 hover:ring-blue-300 transition-all" />
+              ) : (
+                <User size={32} className="hover:text-blue-300 transition-all" />
+              )}
+            </Link>
+          )}
+        </div>
       </nav>
 
       {/* Mobile Menu Overlay */}
@@ -79,10 +94,24 @@ export default function Navbar() {
           <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4">
             <X size={32} />
           </button>
+          {/* User section at the top */}
+          {user && (
+            <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex flex-col items-center mb-4 group">
+              {user.picture ? (
+                <Image src={user.picture} alt="User Profile" width={40} height={40} className="rounded-full group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
+              ) : (
+                <User size={40} className="group-hover:text-blue-300 transition-all" />
+              )}
+              <span className="mt-2 font-semibold group-hover:underline text-lg">
+                {displayName || user.name || user.nickname || user.email}
+              </span>
+            </Link>
+          )}
+          {/* Divider */}
+          <div className="w-full border-t border-blue-200 opacity-40 mb-2"></div>
           <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link href="/about" onClick={() => setMenuOpen(false)}>About</Link>
           <Link href="/classes" onClick={() => setMenuOpen(false)}>Classes</Link>
-          <Link href="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>
           {isAdmin && <Link href="/admin" onClick={() => setMenuOpen(false)}>Admin</Link>}
           {user ? (
             <Link href="/auth/logout" onClick={() => setMenuOpen(false)}>Log Out</Link>
