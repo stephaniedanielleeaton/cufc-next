@@ -27,10 +27,37 @@ function useUserRoles() {
   return roles;
 }
 
+function useDisplayName() {
+  const { user } = useUser();
+  const [displayName, setDisplayName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDisplayName = async () => {
+      try {
+        const res = await fetch("/api/member/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.displayFirstName || data.displayLastName) {
+            setDisplayName(`${data.displayFirstName ?? ''} ${data.displayLastName ?? ''}`.trim());
+          }
+        }
+      } catch {}
+    };
+    if (user) {
+      fetchDisplayName();
+    } else {
+      setDisplayName(null);
+    }
+  }, [user]);
+  return displayName;
+}
+
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useUser();
   const roles = useUserRoles();
+  const displayName = useDisplayName();
   const isAdmin = roles.includes("club-admin");
 
   return (
@@ -80,6 +107,10 @@ export default function Navbar() {
                   ) : (
                     <User size={28} />
                   )}
+                  {/* Show user name or nickname next to icon */}
+                  <span className="ml-2 font-semibold">
+                    {displayName || user.name || user.nickname || user.email}
+                  </span>
                 </Link>
                 <Link href="/auth/logout" className="hover:underline">Log Out</Link>
               </>
