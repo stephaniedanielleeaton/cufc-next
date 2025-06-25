@@ -1,22 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 
 import Image from "next/image";
 
 export default function Home() {
-  const [backendValue, setBackendValue] = useState<string>("");
-  const frontendValue = process.env.NEXT_PUBLIC_TEST_FRONTEND_VALUE || "";
 
   const { user, isLoading } = useUser();
-
-  // Fetch backend test value
-  useEffect(() => {
-    fetch("/api/test-value")
-      .then((res) => res.json())
-      .then((data) => setBackendValue(data.value || ""));
-  }, []);
 
   return (
     <>
