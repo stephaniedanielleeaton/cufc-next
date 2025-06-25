@@ -100,15 +100,13 @@ export default function Navbar() {
             {user ? (
               <>
                 {isAdmin && <Link href="/admin" className="hover:underline">Admin</Link>}
-                <Link href="/profile" className="flex items-center gap-2">
-                  <span>Profile</span>
+                <Link href="/profile" className="flex items-center gap-3 group">
                   {user.picture ? (
-                    <Image src={user.picture} alt="User Profile" width={32} height={32} className="rounded-full" />
+                    <Image src={user.picture} alt="User Profile" width={40} height={40} className="rounded-full group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
                   ) : (
-                    <User size={28} />
+                    <User size={40} className="group-hover:text-blue-300 transition-all" />
                   )}
-                  {/* Show user name or nickname next to icon */}
-                  <span className="ml-2 font-semibold">
+                  <span className="ml-2 font-semibold group-hover:underline">
                     {displayName || user.name || user.nickname || user.email}
                   </span>
                 </Link>
