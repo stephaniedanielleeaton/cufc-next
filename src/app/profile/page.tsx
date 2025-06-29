@@ -27,8 +27,18 @@ export default async function ProfilePage() {
     display_first_name: member.displayFirstName ?? "",
     display_last_name: member.displayLastName ?? "",
     personal_info: {
+      legalFirstName: member.personalInfo?.legalFirstName ?? "",
+      legalLastName: member.personalInfo?.legalLastName ?? "",
       email: member.personalInfo?.email ?? "",
       phone: member.personalInfo?.phone ?? "",
+      dateOfBirth: member.personalInfo?.dateOfBirth?.toISOString() ?? "",
+      address: {
+        street: member.personalInfo?.address?.street ?? "",
+        city: member.personalInfo?.address?.city ?? "",
+        state: member.personalInfo?.address?.state ?? "",
+        zip: member.personalInfo?.address?.zip ?? "",
+        country: member.personalInfo?.address?.country ?? "",
+      },
     },
   };
 

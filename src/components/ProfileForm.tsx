@@ -36,10 +36,27 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/members/update", {
+    // Clone formData and ensure dateOfBirth is ISO string if present
+    let dataToSend = { ...formData };
+    if (dataToSend.personal_info?.dateOfBirth) {
+      // Only convert if not already in ISO format
+      const dob = dataToSend.personal_info.dateOfBirth;
+      // If it's already 10 chars (yyyy-mm-dd), convert to ISO
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+        dataToSend = {
+          ...dataToSend,
+          personal_info: {
+            ...dataToSend.personal_info,
+            dateOfBirth: new Date(dob).toISOString(),
+          },
+        };
+      }
+      // If it's already ISO, leave as is
+    }
+    const res = await fetch("/api/member/me/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(dataToSend),
     });
     if (res.ok) {
       alert("Profile updated!");
@@ -47,6 +64,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       alert("Error updating profile.");
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
