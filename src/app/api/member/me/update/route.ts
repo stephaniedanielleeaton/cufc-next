@@ -28,7 +28,8 @@ export async function POST(req: Request) {
       "personalInfo.address.city": body.personal_info?.address?.city,
       "personalInfo.address.state": body.personal_info?.address?.state,
       "personalInfo.address.zip": body.personal_info?.address?.zip,
-      "personalInfo.address.country": body.personal_info?.address?.country
+      "personalInfo.address.country": body.personal_info?.address?.country,
+      profileComplete: body.profileComplete
     }
   };
   console.log("[PROFILE UPDATE] Update object:", JSON.stringify(updateObj, null, 2));
