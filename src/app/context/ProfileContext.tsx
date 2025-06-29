@@ -49,8 +49,12 @@ import React, {
         const data = await res.json();
         console.log("Fetched profile data:", data);
         setProfile(data);
-      } catch (err: any) {
-        setError(err.message || "Unknown error");
+      } catch (err) {
+      if (err instanceof Error) {
+            setError(err.message);
+      } else {
+        setError("Unknown error");
+      }
         setProfile(null);
       } finally {
         setLoading(false);

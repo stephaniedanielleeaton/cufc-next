@@ -8,26 +8,28 @@ import { DesktopNavbar } from "./navbar/DesktopNavbar";
 import { useUserRoles } from "../hooks/useUserRoles";
 import { useMemberProfile } from "@/app/context/ProfileContext";
 
+type Auth0User = {
+  picture?: string;
+  name?: string;
+  nickname?: string;
+  email?: string;
+};
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useUser();
   const roles = useUserRoles();
-  const { profile, loading } = useMemberProfile();
+  const { profile } = useMemberProfile();
   const displayName = `${profile?.displayFirstName || ""} ${profile?.displayLastName || ""}`.trim();
   const profileComplete = profile?.profileComplete ?? false;
   const isAdmin = roles.includes("club-admin");
 
-  function handleOpenMenu() {
-    setMenuOpen(true);
-  }
-  function handleCloseMenu() {
-    setMenuOpen(false);
-  }
+  
 
   return (
     <>
       <MobileNavbar
-        user={user}
+        user={user as Auth0User | null}
         isAdmin={isAdmin}
         displayName={displayName}
         profileComplete={profileComplete}
@@ -37,7 +39,7 @@ export default function Navbar() {
         AUTH_LOGOUT_PATH={AUTH_LOGOUT_PATH}
       />
       <DesktopNavbar
-        user={user}
+        user={user as Auth0User | null}
         isAdmin={isAdmin}
         displayName={displayName}
         profileComplete={profileComplete}

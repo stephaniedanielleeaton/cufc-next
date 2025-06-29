@@ -10,43 +10,6 @@ export default function Home() {
 
   return (
     <>
-
-      <div className="flex flex-col items-center justify-center min-h-screen p-8 gap-8 font-sans mt-[130px]">
-        <div className="p-4 border rounded bg-gray-50 dark:bg-gray-900 w-full max-w-md mb-4">
-          <strong>Auth0 User State:</strong>
-          {isLoading ? (
-            <div>Loading...</div>
-          ) : user ? (
-            <div className="flex items-center gap-4">
-              {user.picture && (
-                <Image
-                  src={user.picture}
-                  alt="User"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              )}
-              <div className="flex flex-col">
-                <span className="font-bold">{user.name}</span>
-                <a
-                  href="/profile"
-                  className="text-blue-600 hover:underline text-sm"
-                >
-                  Go to Profile
-                </a>
-              </div>
-            </div>
-          ) : (
-            <a
-              href="/auth/login"
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded"
-            >
-              Log in to Join the Gym
-            </a>
-          )}
-        </div>
-      </div>
     </>
   );
 }

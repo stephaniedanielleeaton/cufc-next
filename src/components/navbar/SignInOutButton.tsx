@@ -1,5 +1,13 @@
+type Auth0User = {
+  picture?: string;
+  name?: string;
+  nickname?: string;
+  email?: string;
+  // add other Auth0 user fields as needed
+};
+
 type SignInOutButtonProps = {
-  user: any;
+  user: Auth0User | null;
   onClick: () => void;
   className?: string;
 };

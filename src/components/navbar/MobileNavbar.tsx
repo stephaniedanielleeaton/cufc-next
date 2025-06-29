@@ -7,8 +7,16 @@ import { UserNameWithAlert } from "./UserNameWithAlert";
 import { NavLinks } from "./NavLinks";
 import { AdminLink } from "./AdminLink";
 
+type Auth0User = {
+  picture?: string;
+  name?: string;
+  nickname?: string;
+  email?: string;
+  // add other Auth0 user fields as needed
+};
+
 type MobileNavbarProps = {
-  user: any;
+  user: Auth0User | null;
   isAdmin: boolean;
   displayName: string | null;
   profileComplete: boolean;
