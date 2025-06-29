@@ -17,18 +17,18 @@ export async function POST(req: Request) {
 
   const updateObj = {
     $set: {
-      displayFirstName: body.display_first_name,
-      displayLastName: body.display_last_name,
-      "personalInfo.legalFirstName": body.personal_info?.legalFirstName,
-      "personalInfo.legalLastName": body.personal_info?.legalLastName,
-      "personalInfo.email": body.personal_info?.email,
-      "personalInfo.phone": body.personal_info?.phone,
-      "personalInfo.dateOfBirth": body.personal_info?.dateOfBirth,
-      "personalInfo.address.street": body.personal_info?.address?.street,
-      "personalInfo.address.city": body.personal_info?.address?.city,
-      "personalInfo.address.state": body.personal_info?.address?.state,
-      "personalInfo.address.zip": body.personal_info?.address?.zip,
-      "personalInfo.address.country": body.personal_info?.address?.country,
+      displayFirstName: body.displayFirstName,
+      displayLastName: body.displayLastName,
+      "personalInfo.legalFirstName": body.personalInfo?.legalFirstName,
+      "personalInfo.legalLastName": body.personalInfo?.legalLastName,
+      "personalInfo.email": body.personalInfo?.email,
+      "personalInfo.phone": body.personalInfo?.phone,
+      "personalInfo.dateOfBirth": body.personalInfo?.dateOfBirth,
+      "personalInfo.address.street": body.personalInfo?.address?.street,
+      "personalInfo.address.city": body.personalInfo?.address?.city,
+      "personalInfo.address.state": body.personalInfo?.address?.state,
+      "personalInfo.address.zip": body.personalInfo?.address?.zip,
+      "personalInfo.address.country": body.personalInfo?.address?.country,
       profileComplete: body.profileComplete
     }
   };

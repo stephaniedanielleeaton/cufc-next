@@ -6,13 +6,15 @@ import { AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH } from "@/lib/auth/paths";
 import { MobileNavbar } from "./navbar/MobileNavbar";
 import { DesktopNavbar } from "./navbar/DesktopNavbar";
 import { useUserRoles } from "../hooks/useUserRoles";
-import { useProfileInfo } from "../hooks/useProfileInfo";
+import { useMemberProfile } from "@/app/context/ProfileContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useUser();
   const roles = useUserRoles();
-  const { displayName, profileComplete } = useProfileInfo();
+  const { profile, loading } = useMemberProfile();
+  const displayName = `${profile?.displayFirstName || ""} ${profile?.displayLastName || ""}`.trim();
+  const profileComplete = profile?.profileComplete ?? false;
   const isAdmin = roles.includes("club-admin");
 
   function handleOpenMenu() {

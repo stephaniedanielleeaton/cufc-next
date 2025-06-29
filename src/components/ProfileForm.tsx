@@ -1,20 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useMemberProfile } from "@/app/context/ProfileContext";
 
 export default function ProfileForm({ member }: { member: MemberProfileFormInput }) {
+  const { refreshProfile } = useMemberProfile();
   const [formData, setFormData] = useState<MemberProfileFormInput>(member);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!formData.display_first_name?.trim()) newErrors.display_first_name = "Display first name is required.";
-    if (!formData.display_last_name?.trim()) newErrors.display_last_name = "Display last name is required.";
-    if (!formData.personal_info?.legalFirstName?.trim()) newErrors.legalFirstName = "Legal first name is required.";
-    if (!formData.personal_info?.legalLastName?.trim()) newErrors.legalLastName = "Legal last name is required.";
-    if (!formData.personal_info?.email?.trim()) newErrors.email = "Email is required.";
-    if (!formData.personal_info?.dateOfBirth?.trim()) newErrors.dateOfBirth = "Date of birth is required.";
-    const address = formData.personal_info?.address || {};
+    if (!formData.displayFirstName?.trim()) newErrors.displayFirstName = "Display first name is required.";
+    if (!formData.displayLastName?.trim()) newErrors.displayLastName = "Display last name is required.";
+    if (!formData.personalInfo?.legalFirstName?.trim()) newErrors.legalFirstName = "Legal first name is required.";
+    if (!formData.personalInfo?.legalLastName?.trim()) newErrors.legalLastName = "Legal last name is required.";
+    if (!formData.personalInfo?.email?.trim()) newErrors.email = "Email is required.";
+    if (!formData.personalInfo?.dateOfBirth?.trim()) newErrors.dateOfBirth = "Date of birth is required.";
+    const address = formData.personalInfo?.address || {};
     if (!address.street?.trim()) newErrors.street = "Street is required.";
     if (!address.city?.trim()) newErrors.city = "City is required.";
     if (!address.state?.trim()) newErrors.state = "State is required.";
@@ -26,24 +28,24 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name.startsWith("personal_info.address.")) {
+    if (name.startsWith("personalInfo.address.")) {
       const key = name.split(".")[2];
       setFormData((prev) => ({
         ...prev,
-        personal_info: {
-          ...prev.personal_info,
+        personalInfo: {
+          ...prev.personalInfo,
           address: {
-            ...prev.personal_info?.address,
+            ...prev.personalInfo?.address,
             [key]: value,
           },
         },
       }));
-    } else if (name.startsWith("personal_info.")) {
+    } else if (name.startsWith("personalInfo.")) {
       const key = name.split(".")[1];
       setFormData((prev) => ({
         ...prev,
-        personal_info: {
-          ...prev.personal_info,
+        personalInfo: {
+          ...prev.personalInfo,
           [key]: value,
         },
       }));
@@ -65,12 +67,12 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
     }
 
     let dataToSend = { ...formData, profileComplete: true };
-    if (dataToSend.personal_info?.dateOfBirth) {
+    if (dataToSend.personalInfo?.dateOfBirth) {
       dataToSend = {
         ...dataToSend,
-        personal_info: {
-          ...dataToSend.personal_info,
-          dateOfBirth: new Date(dataToSend.personal_info.dateOfBirth).toISOString(),
+        personalInfo: {
+          ...dataToSend.personalInfo,
+          dateOfBirth: new Date(dataToSend.personalInfo.dateOfBirth).toISOString(),
         },
       };
     }
@@ -81,7 +83,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       body: JSON.stringify(dataToSend),
     });
     if (res.ok) {
-      alert("Profile updated!");
+      await refreshProfile();
+    alert("Profile updated!");
     } else {
       alert("Error updating profile.");
     }
@@ -94,29 +97,29 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       <label className="block">
         Display First Name:
         <input
-          name="display_first_name"
-          value={formData.display_first_name || ""}
+          name="displayFirstName"
+          value={formData.displayFirstName || ""}
           onChange={handleChange}
-          className={`block w-full border p-2 rounded ${errors.display_first_name ? 'border-red-500' : ''}`}
-          aria-invalid={!!errors.display_first_name}
-          aria-describedby={errors.display_first_name ? 'error-display_first_name' : undefined}
+          className={`block w-full border p-2 rounded ${errors.displayFirstName ? 'border-red-500' : ''}`}
+          aria-invalid={!!errors.displayFirstName}
+          aria-describedby={errors.displayFirstName ? 'error-displayFirstName' : undefined}
         />
-        {errors.display_first_name && (
-          <span id="error-display_first_name" className="text-red-600 text-sm">{errors.display_first_name}</span>
+        {errors.displayFirstName && (
+          <span id="error-displayFirstName" className="text-red-600 text-sm">{errors.displayFirstName}</span>
         )}
       </label>
       <label className="block">
         Display Last Name:
         <input
-          name="display_last_name"
-          value={formData.display_last_name || ""}
+          name="displayLastName"
+          value={formData.displayLastName || ""}
           onChange={handleChange}
-          className={`block w-full border p-2 rounded ${errors.display_last_name ? 'border-red-500' : ''}`}
-          aria-invalid={!!errors.display_last_name}
-          aria-describedby={errors.display_last_name ? 'error-display_last_name' : undefined}
+          className={`block w-full border p-2 rounded ${errors.displayLastName ? 'border-red-500' : ''}`}
+          aria-invalid={!!errors.displayLastName}
+          aria-describedby={errors.displayLastName ? 'error-displayLastName' : undefined}
         />
-        {errors.display_last_name && (
-          <span id="error-display_last_name" className="text-red-600 text-sm">{errors.display_last_name}</span>
+        {errors.displayLastName && (
+          <span id="error-displayLastName" className="text-red-600 text-sm">{errors.displayLastName}</span>
         )}
       </label>
 
@@ -124,8 +127,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       <label className="block">
         Legal First Name:
         <input
-          name="personal_info.legalFirstName"
-          value={formData.personal_info?.legalFirstName || ""}
+          name="personalInfo.legalFirstName"
+          value={formData.personalInfo?.legalFirstName || ""}
           onChange={handleChange}
           className={`block w-full border p-2 rounded ${errors.legalFirstName ? 'border-red-500' : ''}`}
           aria-invalid={!!errors.legalFirstName}
@@ -138,8 +141,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       <label className="block">
         Legal Last Name:
         <input
-          name="personal_info.legalLastName"
-          value={formData.personal_info?.legalLastName || ""}
+          name="personalInfo.legalLastName"
+          value={formData.personalInfo?.legalLastName || ""}
           onChange={handleChange}
           className={`block w-full border p-2 rounded ${errors.legalLastName ? 'border-red-500' : ''}`}
           aria-invalid={!!errors.legalLastName}
@@ -154,8 +157,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       <label className="block">
         Email:
         <input
-          name="personal_info.email"
-          value={formData.personal_info?.email || ""}
+          name="personalInfo.email"
+          value={formData.personalInfo?.email || ""}
           onChange={handleChange}
           className={`block w-full border p-2 rounded ${errors.email ? 'border-red-500' : ''}`}
           aria-invalid={!!errors.email}
@@ -168,8 +171,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       <label className="block">
         Phone:
         <input
-          name="personal_info.phone"
-          value={formData.personal_info?.phone || ""}
+          name="personalInfo.phone"
+          value={formData.personalInfo?.phone || ""}
           onChange={handleChange}
           className="block w-full border p-2 rounded"
         />
@@ -180,8 +183,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
         Date of Birth:
         <input
           type="date"
-          name="personal_info.dateOfBirth"
-          value={formData.personal_info?.dateOfBirth ? formData.personal_info.dateOfBirth.slice(0, 10) : ""}
+          name="personalInfo.dateOfBirth"
+          value={formData.personalInfo?.dateOfBirth ? formData.personalInfo.dateOfBirth.slice(0, 10) : ""}
           onChange={handleChange}
           className={`block w-full border p-2 rounded ${errors.dateOfBirth ? 'border-red-500' : ''}`}
           aria-invalid={!!errors.dateOfBirth}
@@ -198,8 +201,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
         <label className="block">
           Street:
           <input
-            name="personal_info.address.street"
-            value={formData.personal_info?.address?.street || ""}
+            name="personalInfo.address.street"
+            value={formData.personalInfo?.address?.street || ""}
             onChange={handleChange}
             className={`block w-full border p-2 rounded ${errors.street ? 'border-red-500' : ''}`}
             aria-invalid={!!errors.street}
@@ -212,8 +215,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
         <label className="block">
           City:
           <input
-            name="personal_info.address.city"
-            value={formData.personal_info?.address?.city || ""}
+            name="personalInfo.address.city"
+            value={formData.personalInfo?.address?.city || ""}
             onChange={handleChange}
             className={`block w-full border p-2 rounded ${errors.city ? 'border-red-500' : ''}`}
             aria-invalid={!!errors.city}
@@ -226,8 +229,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
         <label className="block">
           State:
           <input
-            name="personal_info.address.state"
-            value={formData.personal_info?.address?.state || ""}
+            name="personalInfo.address.state"
+            value={formData.personalInfo?.address?.state || ""}
             onChange={handleChange}
             className={`block w-full border p-2 rounded ${errors.state ? 'border-red-500' : ''}`}
             aria-invalid={!!errors.state}
@@ -240,8 +243,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
         <label className="block">
           ZIP:
           <input
-            name="personal_info.address.zip"
-            value={formData.personal_info?.address?.zip || ""}
+            name="personalInfo.address.zip"
+            value={formData.personalInfo?.address?.zip || ""}
             onChange={handleChange}
             className={`block w-full border p-2 rounded ${errors.zip ? 'border-red-500' : ''}`}
             aria-invalid={!!errors.zip}
@@ -254,8 +257,8 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
         <label className="block">
           Country:
           <input
-            name="personal_info.address.country"
-            value={formData.personal_info?.address?.country || ""}
+            name="personalInfo.address.country"
+            value={formData.personalInfo?.address?.country || ""}
             onChange={handleChange}
             className={`block w-full border p-2 rounded ${errors.country ? 'border-red-500' : ''}`}
             aria-invalid={!!errors.country}
@@ -275,9 +278,10 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
 }
 
 export interface MemberProfileFormInput {
-  display_first_name?: string;
-  display_last_name?: string;
-  personal_info?: {
+  displayFirstName?: string;
+  displayLastName?: string;
+  profileComplete?: boolean;
+  personalInfo?: {
     legalFirstName?: string;
     legalLastName?: string;
     email?: string;
