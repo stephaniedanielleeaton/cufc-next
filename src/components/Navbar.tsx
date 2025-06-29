@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,29 +27,36 @@ function useUserRoles() {
   return roles;
 }
 
-function useDisplayName() {
+function useProfileInfo() {
   const { user } = useUser();
-  const [displayName, setDisplayName] = useState<string | null>(null);
+  const [profileInfo, setProfileInfo] = useState<{ displayName: string | null; profileComplete: boolean }>({ displayName: null, profileComplete: true });
 
   useEffect(() => {
-    const fetchDisplayName = async () => {
+    const fetchProfileInfo = async () => {
       try {
         const res = await fetch("/api/member/me");
         if (res.ok) {
           const data = await res.json();
+          let displayName = null;
           if (data.displayFirstName || data.displayLastName) {
-            setDisplayName(`${data.displayFirstName ?? ''} ${data.displayLastName ?? ''}`.trim());
+            displayName = `${data.displayFirstName ?? ''} ${data.displayLastName ?? ''}`.trim();
           }
+          setProfileInfo({
+            displayName: displayName,
+            profileComplete: data.profileComplete ?? true,
+          });
         }
-      } catch {}
+      } catch {
+        setProfileInfo({ displayName: null, profileComplete: true });
+      }
     };
     if (user) {
-      fetchDisplayName();
+      fetchProfileInfo();
     } else {
-      setDisplayName(null);
+      setProfileInfo({ displayName: null, profileComplete: true });
     }
   }, [user]);
-  return displayName;
+  return profileInfo;
 }
 
 
@@ -57,7 +64,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useUser();
   const roles = useUserRoles();
-  const displayName = useDisplayName();
+  const { displayName, profileComplete } = useProfileInfo();
   const isAdmin = roles.includes("club-admin");
 
   return (
@@ -102,8 +109,11 @@ export default function Navbar() {
               ) : (
                 <User size={40} className="group-hover:text-blue-300 transition-all" />
               )}
-              <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg">
+              <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg flex items-center gap-1">
                 {displayName || user.name || user.nickname || user.email}
+                {!profileComplete && (
+                  <AlertCircle size={20} className="text-yellow-400 ml-1" title="Profile incomplete" aria-label="Profile incomplete" />
+                )}
               </span>
             </Link>
           )}
@@ -139,7 +149,7 @@ export default function Navbar() {
                 {user ? (
                   <button
                     onClick={() => {
-                      window.location.href = "/api/auth/logout";
+                      window.location.href = "/auth/logout";
                     }}
                     className="bg-[#904F69] text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2"
                     aria-label="Log out"
@@ -147,7 +157,7 @@ export default function Navbar() {
                     Log Out
                   </button>
                 ) : (
-                  <Link href="/api/auth/login" className="bg-[#904F69] text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2">
+                  <Link href="/auth/login" className="bg-[#904F69] text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2">
                     Log In
                   </Link>
                 )}
@@ -157,13 +167,16 @@ export default function Navbar() {
                   ) : (
                     <User size={40} className="group-hover:text-blue-300 transition-all" />
                   )}
-                  <span className="ml-2 font-semibold group-hover:text-[#904F69]">
+                  <span className="ml-2 font-semibold group-hover:text-[#904F69] flex items-center gap-1">
                     {displayName || user.name || user.nickname || user.email}
+                    {!profileComplete && (
+                      <AlertCircle size={20} className="text-yellow-400 ml-1" title="Profile incomplete" aria-label="Profile incomplete" />
+                    )}
                   </span>
                 </Link>
               </>
             ) : (
-              <Link href="/api/auth/login" className="flex items-center gap-2 hover:text-[#904F69] uppercase tracking-widest">
+              <Link href="/auth/login" className="flex items-center gap-2 hover:text-[#904F69] uppercase tracking-widest">
                 <span>Sign In</span>
                 <User size={28} />
               </Link>

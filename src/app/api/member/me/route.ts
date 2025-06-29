@@ -24,5 +24,6 @@ export async function GET() {
     displayLastName: member.displayLastName,
     personalInfo: member.personalInfo,
     email: member.personalInfo?.email,
+    profileComplete: member.profileComplete ?? false,
   });
 }
