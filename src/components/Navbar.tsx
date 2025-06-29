@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
+import { AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH } from "@/lib/auth/paths";
 import { Menu, X, User, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,7 +89,7 @@ export default function Navbar() {
               {user.picture ? (
                 <Image src={user.picture} alt="User Profile" width={32} height={32} className="rounded-full hover:ring-2 hover:ring-blue-300 transition-all" />
               ) : (
-                <User size={32} className="hover:text-blue-300 transition-all" />
+                <span className="w-8 h-8 rounded-full bg-gray-200 border hover:ring-2 hover:ring-blue-300 transition-all block" />
               )}
             </Link>
           )}
@@ -107,7 +108,7 @@ export default function Navbar() {
               {user.picture ? (
                 <Image src={user.picture} alt="User Profile" width={40} height={40} className="rounded-full group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
               ) : (
-                <User size={40} className="group-hover:text-blue-300 transition-all" />
+                <span className="w-10 h-10 rounded-full bg-gray-200 border group-hover:ring-2 group-hover:ring-blue-300 transition-all block" />
               )}
               <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg flex items-center gap-1">
                 {displayName || user.name || user.nickname || user.email}
@@ -126,11 +127,16 @@ export default function Navbar() {
           <Link href="/contact" onClick={() => setMenuOpen(false)} className="tracking-widest hover:text-[#904F69]">Contact</Link>
           <Link href="/notifications" onClick={() => setMenuOpen(false)} className="tracking-widest hover:text-[#904F69]">Notifications</Link>
           {isAdmin && <Link href="/admin" onClick={() => setMenuOpen(false)} className="tracking-widest hover:text-[#904F69]">Admin</Link>}
-          {user ? (
-            <Link href="/auth/logout" onClick={() => setMenuOpen(false)} className="tracking-widest hover:text-[#904F69]">Log Out</Link>
-          ) : (
-            <Link href="/auth/login" onClick={() => setMenuOpen(false)}>Sign In</Link>
-          )}
+          <button
+  onClick={() => {
+    window.location.href = user ? AUTH_LOGOUT_PATH : AUTH_LOGIN_PATH;
+    setMenuOpen(false);
+  }}
+  className="bg-medium-pink text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2"
+  aria-label={user ? "Sign out" : "Sign in"}
+>
+  {user ? "Sign Out" : "Sign In"}
+</button>
         </div>
       )}
 
@@ -146,27 +152,21 @@ export default function Navbar() {
                     Admin
                   </Link>
                 )}
-                {user ? (
-                  <button
-                    onClick={() => {
-                      window.location.href = "/auth/logout";
-                    }}
-                    className="bg-[#904F69] text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2"
-                    aria-label="Log out"
-                  >
-                    Log Out
-                  </button>
-                ) : (
-                  <Link href="/auth/login" className="bg-[#904F69] text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2">
-                    Log In
-                  </Link>
-                )}
+                <button
+  onClick={() => {
+    window.location.href = user ? AUTH_LOGOUT_PATH : AUTH_LOGIN_PATH;
+  }}
+  className="bg-[#904F69] text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2"
+  aria-label={user ? "Sign out" : "Sign in"}
+>
+  {user ? "Sign Out" : "Sign In"}
+</button>
                 <Link href="/profile" className="flex items-center gap-3 group">
                   {user.picture ? (
-                    <Image src={user.picture} alt="User Profile" width={40} height={40} className="rounded-full group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
-                  ) : (
-                    <User size={40} className="group-hover:text-blue-300 transition-all" />
-                  )}
+  <Image src={user.picture} alt="User Profile" width={40} height={40} className="rounded-full group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
+) : (
+  <span className="w-10 h-10 rounded-full bg-gray-200 border group-hover:ring-2 group-hover:ring-blue-300 transition-all block" />
+)}
                   <span className="ml-2 font-semibold group-hover:text-[#904F69] flex items-center gap-1">
                     {displayName || user.name || user.nickname || user.email}
                     {!profileComplete && (
@@ -176,10 +176,16 @@ export default function Navbar() {
                 </Link>
               </>
             ) : (
-              <Link href="/auth/login" className="flex items-center gap-2 hover:text-[#904F69] uppercase tracking-widest">
-                <span>Sign In</span>
-                <User size={28} />
-              </Link>
+              <>
+  <button
+    onClick={() => { window.location.href = AUTH_LOGIN_PATH; }}
+    className="bg-medium-pink text-white px-4 h-[58px] flex items-center uppercase tracking-widest ml-0 mr-2"
+    aria-label="Sign in"
+  >
+    Sign In
+  </button>
+  <span className="w-10 h-10 rounded-full bg-gray-200 border group-hover:ring-2 group-hover:ring-blue-300 transition-all block" />
+</>
             )}
           </div>
         </div>
@@ -191,6 +197,7 @@ export default function Navbar() {
           <div className="flex gap-10">
             <Link href="/join" className="hover:text-[#904F69] uppercase tracking-widest">Join</Link>
             <Link href="/get-started" className="hover:text-[#904F69] uppercase tracking-widest">Get Started</Link>
+            
             <Link href="/about" className="hover:text-[#904F69] uppercase tracking-widest">About</Link>
             <Link href="/events" className="hover:text-[#904F69] uppercase tracking-widest">Events</Link>
             <Link href="/contact" className="hover:text-[#904F69] uppercase tracking-widest">Contact</Link>
