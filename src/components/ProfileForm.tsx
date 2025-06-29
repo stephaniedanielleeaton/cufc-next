@@ -36,22 +36,15 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Clone formData and ensure dateOfBirth is ISO string if present
     let dataToSend = { ...formData };
     if (dataToSend.personal_info?.dateOfBirth) {
-      // Only convert if not already in ISO format
-      const dob = dataToSend.personal_info.dateOfBirth;
-      // If it's already 10 chars (yyyy-mm-dd), convert to ISO
-      if (/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-        dataToSend = {
-          ...dataToSend,
-          personal_info: {
-            ...dataToSend.personal_info,
-            dateOfBirth: new Date(dob).toISOString(),
-          },
-        };
-      }
-      // If it's already ISO, leave as is
+      dataToSend = {
+        ...dataToSend,
+        personal_info: {
+          ...dataToSend.personal_info,
+          dateOfBirth: new Date(dataToSend.personal_info.dateOfBirth).toISOString(),
+        },
+      };
     }
     const res = await fetch("/api/member/me/update", {
       method: "POST",
