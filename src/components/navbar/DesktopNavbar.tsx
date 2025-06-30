@@ -26,7 +26,7 @@ type DesktopNavbarProps = {
 export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH }: DesktopNavbarProps) {
   return (
     <div className="hidden md:block w-full z-40">
-      <div className="h-[58px] bg-navy text-white flex items-center justify-between px-12 py-1 font-khula">
+      <div className="h-[58px] bg-navy text-white flex items-center justify-between px-12 py-1 font-khula font-normal leading-none tracking-[.1em]">
         <Image src="/pride-flag.svg" alt="Pride" width={32} height={32} />
         <div className="flex items-center gap-4">
           {user ? (
@@ -54,9 +54,11 @@ export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUT
           )}
         </div>
       </div>
-      <div className="bg-white px-12 flex items-center justify-between font-khula text-navy py-0">
+      <div className="bg-white px-12 flex items-center justify-between font-khula font-normal leading-none tracking-[.1em] text-navy py-0">
         <Link href="/">
-          <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={140} height={50} />
+          <div className="py-2">
+            <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={200} height={71} />
+          </div>
         </Link>
         <div className="flex gap-10">
           <NavLinks />
