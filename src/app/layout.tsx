@@ -69,7 +69,7 @@ export default function RootLayout({
       >
         <MemberProfileProvider>
         <Navbar />
-        <div className="pt-[130px]">{children}</div>
+        <div>{children}</div>
         </MemberProfileProvider>
       </body>
     </html>

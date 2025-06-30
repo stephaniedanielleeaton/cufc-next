@@ -54,7 +54,7 @@ export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUT
           )}
         </div>
       </div>
-      <div className="bg-white min-h-[80px] py-3 border-b px-12 flex items-center justify-between font-khula text-[#182A3A]">
+      <div className="bg-white min-h-[80px] py-3 px-12 flex items-center justify-between font-khula text-navy">
         <Link href="/">
           <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={140} height={50} />
         </Link>

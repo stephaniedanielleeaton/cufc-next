@@ -1,0 +1,31 @@
+import Image from "next/image";
+import SquareButton from "@/components/SquareButton";
+
+export default function Hero() {
+  return (
+    <section className="w-full">
+      <div className="relative w-full h-[420px] md:h-[600px] lg:h-[850px]">
+        <Image
+          src="/meyerwatercolor.png"
+          alt="CUFC Hero Image"
+          fill
+          className="object-cover object-center scale-150 md:scale-100 transition-transform duration-500"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center md:items-start md:justify-center px-6 md:px-16 lg:px-24 mt-[70px] md:mt-0"
+        >
+          <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-center md:text-left drop-shadow-lg mb-6">
+              Columbus Ohio's<br />Premier HEMA Club
+            </h1>
+            <SquareButton href="/join" className="mt-2">
+              JOIN NOW
+            </SquareButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
