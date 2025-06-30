@@ -4,7 +4,7 @@ import SquareButton from "@/components/SquareButton";
 export default function Hero() {
   return (
     <section className="w-full">
-      <div className="relative w-full h-[420px] md:h-[600px] lg:h-[850px]">
+      <div className="relative w-full h-[420px] md:h-[600px] lg:h-[600px]">
         <Image
           src="/meyerwatercolor.png"
           alt="CUFC Hero Image"
