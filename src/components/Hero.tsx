@@ -12,9 +12,9 @@ export default function Hero() {
           className="object-cover object-center scale-150 md:scale-100 transition-transform duration-500"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent pointer-events-none" />
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center md:items-start md:justify-center px-6 md:px-16 lg:px-24 mt-[70px] md:mt-0"
+          className="absolute inset-0 flex flex-col items-center justify-center md:items-start md:justify-center px-6 md:px-16 lg:px-24"
         >
           <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-center md:text-left drop-shadow-lg mb-6">

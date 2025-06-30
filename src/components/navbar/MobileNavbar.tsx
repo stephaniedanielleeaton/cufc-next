@@ -30,7 +30,7 @@ export function MobileNavbar({ user, isAdmin, displayName, profileComplete, menu
   return (
     <>
       {/* Mobile Nav */}
-      <nav className="md:hidden fixed top-0 left-0 w-full h-[70px] bg-navy text-white flex items-center justify-between px-4 font-khula z-50 relative">
+      <nav className="md:hidden w-full h-[70px] bg-navy text-white flex items-center justify-between px-4 font-khula z-50 relative">
         <button onClick={() => setMenuOpen(true)} aria-label="Open menu">
           <Menu size={28} />
         </button>

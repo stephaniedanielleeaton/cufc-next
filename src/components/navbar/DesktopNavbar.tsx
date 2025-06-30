@@ -25,7 +25,7 @@ type DesktopNavbarProps = {
 
 export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH }: DesktopNavbarProps) {
   return (
-    <div className="hidden md:block fixed top-0 left-0 w-full z-40">
+    <div className="hidden md:block w-full z-40">
       <div className="h-[58px] bg-navy text-white flex items-center justify-between px-12 py-1 font-khula">
         <Image src="/pride-flag.svg" alt="Pride" width={32} height={32} />
         <div className="flex items-center gap-4">
@@ -54,7 +54,7 @@ export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUT
           )}
         </div>
       </div>
-      <div className="bg-white min-h-[80px] py-3 px-12 flex items-center justify-between font-khula text-navy">
+      <div className="bg-white px-12 flex items-center justify-between font-khula text-navy py-0">
         <Link href="/">
           <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={140} height={50} />
         </Link>
