@@ -53,33 +53,35 @@ export function MobileNavbar({ user, isAdmin, displayName, profileComplete, menu
 
       {/* Mobile Menu Overlay */}
       {menuOpen && (
-        <div className="fixed inset-0 bg-navy/90 z-50 text-white flex flex-col items-center justify-center space-y-8 font-khula text-xl">
-          <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4" aria-label="Close menu">
-            <X size={32} />
-          </button>
-          {/* User section at the top */}
-          {user && (
-            <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex flex-col items-center mb-4 group">
-              <UserAvatar picture={user.picture} alt="User Profile" size={40} className="group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
-              <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg flex items-center gap-1">
-                {displayName || user.name || user.nickname || user.email}
-                {!profileComplete && (
-                  <UserNameWithAlert displayName={displayName} user={user} profileComplete={profileComplete} />
-                )}
-              </span>
-            </Link>
-          )}
-          <NavLinks onClick={() => setMenuOpen(false)} />
-          {isAdmin && <AdminLink />}
-          <SignInOutButton
-            user={user}
-            onClick={() => {
-              window.location.href = user ? AUTH_LOGOUT_PATH : AUTH_LOGIN_PATH;
-              setMenuOpen(false);
-            }}
-          />
-        </div>
+  <div className="fixed inset-0 bg-navy/90 z-50 text-white font-khula text-xl h-screen w-screen overflow-y-auto">
+    <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4" aria-label="Close menu">
+      <X size={32} />
+    </button>
+    <div className="flex flex-col items-center justify-center h-full w-full space-y-6">
+      {/* User section at the top */}
+      {user && (
+        <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex flex-col items-center group">
+          <UserAvatar picture={user.picture} alt="User Profile" size={40} className="group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
+          <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg flex items-center gap-1">
+            {displayName || user.name || user.nickname || user.email}
+            {!profileComplete && (
+              <UserNameWithAlert displayName={displayName} user={user} profileComplete={profileComplete} />
+            )}
+          </span>
+        </Link>
       )}
+      <NavLinks onClick={() => setMenuOpen(false)} />
+      {isAdmin && <AdminLink />}
+      <SignInOutButton
+        user={user}
+        onClick={() => {
+          window.location.href = user ? AUTH_LOGOUT_PATH : AUTH_LOGIN_PATH;
+          setMenuOpen(false);
+        }}
+      />
+    </div>
+  </div>
+)}
     </>
   );
 }
