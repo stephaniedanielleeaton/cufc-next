@@ -3,7 +3,6 @@ type Auth0User = {
   name?: string;
   nickname?: string;
   email?: string;
-  // add other Auth0 user fields as needed
 };
 
 type SignInOutButtonProps = {
