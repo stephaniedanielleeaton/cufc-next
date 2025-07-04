@@ -40,6 +40,7 @@ export interface IMemberProfile extends Document {
   isWaiverOnFile?: boolean;
   isPaymentWaived?: boolean;
   notes?: string;
+  lastAttendanceCheckIn?: Date;
   profileComplete?: boolean;
   checkedIn?: boolean;
   lastCheckInDate?: Date;
@@ -58,6 +59,7 @@ const MemberProfileSchema = new Schema<IMemberProfile>({
   isWaiverOnFile: Boolean,
   isPaymentWaived: { type: Boolean, default: false },
   notes: String,
+  lastAttendanceCheckIn: Date,
   profileComplete: { type: Boolean, default: false },
   checkedIn: { type: Boolean, default: false },
   lastCheckInDate: Date,
