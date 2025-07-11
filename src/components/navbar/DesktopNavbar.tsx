@@ -54,16 +54,18 @@ export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUT
           )}
         </div>
       </div>
-      <div className="bg-white px-12 flex items-center justify-between font-khula font-normal leading-none tracking-[.1em] text-navy py-0">
-        <Link href="/">
-          <div className="py-2">
-            <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={200} height={71} />
-          </div>
-        </Link>
-        <div className="flex gap-10">
-          <NavLinks />
-        </div>
-      </div>
+      <div className="hidden md:flex justify-around items-center h-[187px] px-8 bg-white overflow-hidden">
+  <div className="flex-none flex justify-center items-center bg-white h-full">
+    <Link href="/">
+      <Image src="/LogoFullColourNavy.svg" alt="CUFC Logo" width={200} height={71} className="w-[200px] cursor-pointer" />
+    </Link>
+  </div>
+  <nav className="md:w-1/2 lg:w-2/3 flex items-center justify-center">
+    <div className="flex items-center justify-center gap-4 lg:gap-8 flex-wrap">
+      <NavLinks />
+    </div>
+  </nav>
+</div>
     </div>
   );
 }

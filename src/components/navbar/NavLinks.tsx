@@ -21,7 +21,7 @@ export function NavLinks({ onClick, className = "" }: NavLinksProps) {
         <Link
           key={link.href}
           href={link.href}
-          className={`hover:text-[#904F69] uppercase tracking-widest ${className}`}
+          className={`hover:text-[#904F69] uppercase tracking-widest whitespace-nowrap ${className}`}
           onClick={onClick}
         >
           {link.label}
