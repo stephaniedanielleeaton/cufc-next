@@ -29,16 +29,17 @@ const tabs = [
 export default function AdminTabs() {
   const pathname = usePathname();
   return (
-    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 rounded-lg p-2 mb-8">
-      <nav className="flex" aria-label="Tabs">
+    <div className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2">
+      <nav className="flex gap-2" aria-label="Tabs">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href;
           return (
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex-1 flex items-center justify-center py-2 px-4 rounded-md text-sm font-medium transition-colors
-                ${isActive ? "bg-white text-MediumPink shadow-sm" : "text-gray-600 hover:text-MediumPink hover:bg-white/50"}`}
+              className={`flex-1 flex items-center justify-center h-10 rounded-md text-sm font-medium transition-colors 
+                ${isActive ? "bg-white shadow text-MediumPink" : "bg-transparent text-gray-600 hover:text-MediumPink"}`}
+              style={{ minWidth: 0 }}
               aria-current={isActive ? "page" : undefined}
             >
               {tab.icon}
