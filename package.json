@@ -12,6 +12,7 @@
     "node": "20.x"
   },
   "dependencies": {
+    "swr": "^2.2.0",
     "@auth0/nextjs-auth0": "^4.6.1",
     "lucide-react": "^0.522.0",
     "mongodb": "^6.17.0",
