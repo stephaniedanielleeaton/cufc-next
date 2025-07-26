@@ -34,7 +34,6 @@ import React, {
     const [error, setError] = useState<string | null>(null);
   
     const fetchProfile = useCallback(async () => {
-      console.log("Current user:", user);
       if (!user) {
         setProfile(null);
         setLoading(false);
@@ -47,7 +46,6 @@ import React, {
         const res = await fetch("/api/member/me");
         if (!res.ok) throw new Error("Failed to fetch profile");
         const data = await res.json();
-        console.log("Fetched profile data:", data);
         setProfile(data);
       } catch (err) {
       if (err instanceof Error) {

@@ -13,7 +13,6 @@ export async function POST(req: Request) {
 
   const auth0Id = session.user.sub;
   const body = await req.json();
-  console.log("[PROFILE UPDATE] Incoming body:", JSON.stringify(body, null, 2));
 
   const updateObj = {
     $set: {
@@ -32,7 +31,6 @@ export async function POST(req: Request) {
       profileComplete: body.profileComplete
     }
   };
-  console.log("[PROFILE UPDATE] Update object:", JSON.stringify(updateObj, null, 2));
 
   const updated = await MemberProfile.findOneAndUpdate(
     { auth0Id },
