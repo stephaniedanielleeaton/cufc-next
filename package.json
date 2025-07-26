@@ -12,18 +12,20 @@
     "node": "20.x"
   },
   "dependencies": {
-    "swr": "^2.2.0",
     "@auth0/nextjs-auth0": "^4.6.1",
     "lucide-react": "^0.522.0",
+    "luxon": "^3.7.1",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.0",
     "next": "15.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "swr": "^2.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/luxon": "^3.6.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

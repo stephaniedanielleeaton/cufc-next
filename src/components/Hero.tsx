@@ -18,7 +18,7 @@ export default function Hero() {
         >
           <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-center md:text-left drop-shadow-lg mb-6">
-              Columbus Ohio's<br />Premier HEMA Club
+              Columbus Ohio&apos;s<br />Premier HEMA Club
             </h1>
             <SquareButton href="/join" className="mt-2">
               JOIN NOW
