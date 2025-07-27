@@ -6,13 +6,7 @@ import { DateTime } from "luxon";
 import { APP_TIMEZONE } from "@/lib/config/appTime";
 
 import { AttendanceScreenMember } from "@/lib/types/AttendanceScreenMember";
-
-interface MemberCheckIn {
-  id: string;
-  displayFirstName?: string;
-  displayLastName?: string;
-  isCheckedIn: boolean;
-}
+import { MemberCheckIn } from "@/lib/types/MemberCheckIn";
 
 export async function GET() {
   try {
