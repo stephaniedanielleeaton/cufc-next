@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MemberCheckIn } from "@/lib/types/MemberCheckIn";
+import { MemberCheckIn } from "@/types/MemberCheckIn";
 
 import { useToggleAttendance } from "@/hooks/useToggleAttendance";
 import { SearchBar } from "@/components/attendance/SearchBar";

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemberCard } from './MemberCard';
-import { MemberCheckIn } from '@/lib/types/MemberCheckIn';
+import { MemberCheckIn } from '@/types/MemberCheckIn';
 
 describe('MemberCard Component', () => {
   const mockOnCheckIn = jest.fn();

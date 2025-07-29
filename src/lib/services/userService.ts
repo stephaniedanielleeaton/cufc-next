@@ -1,6 +1,6 @@
 import { User, IUser } from "@/lib/models/User"
 import { dbConnect } from "@/lib/mongoose"
-import { Auth0User } from "@/lib/types/Auth0User"
+import { Auth0User } from "@/types/Auth0User"
 
 export async function findOrCreateUser(auth0User: Auth0User): Promise<IUser> {
   await dbConnect();

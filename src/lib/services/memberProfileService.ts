@@ -1,5 +1,5 @@
 import { MemberProfile } from "@/lib/models/MemberProfile";
-import { Auth0User } from "@/lib/types/Auth0User";
+import { Auth0User } from "@/types/Auth0User";
 
 export async function findOrCreateMemberProfile(auth0User: Auth0User) {
     const auth0Id = auth0User.sub;

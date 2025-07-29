@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemberCheckIn } from '@/lib/types/MemberCheckIn';
+import { MemberCheckIn } from '@/types/MemberCheckIn';
 
 interface MemberCardProps {
   member: MemberCheckIn;

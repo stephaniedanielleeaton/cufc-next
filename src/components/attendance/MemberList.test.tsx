@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemberList } from './MemberList';
-import { MemberCheckIn } from '@/lib/types/MemberCheckIn';
+import { MemberCheckIn } from '@/types/MemberCheckIn';
 
 jest.mock('./MemberCard', () => ({
   MemberCard: ({ member, onCheckIn }: { member: MemberCheckIn, onCheckIn: (id: string) => void }) => (

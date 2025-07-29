@@ -3,8 +3,8 @@ import { MemberProfile } from "@/lib/models/MemberProfile";
 import { Attendance } from "@/lib/models/Attendance";
 import { DateTime } from "luxon";
 import { APP_TIMEZONE } from "@/lib/config/appTime";
-import { AttendanceScreenMember } from "@/lib/types/AttendanceScreenMember";
-import { MemberCheckIn } from "@/lib/types/MemberCheckIn";
+import { AttendanceScreenMember } from "@/types/AttendanceScreenMember";
+import { MemberCheckIn } from "@/types/MemberCheckIn";
 
 export async function getMembersWithCheckInStatus(): Promise<MemberCheckIn[]> {
   const members = await MemberProfile.find({}, {
