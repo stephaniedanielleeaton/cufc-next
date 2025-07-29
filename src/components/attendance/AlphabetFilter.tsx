@@ -1,15 +1,15 @@
 import React from 'react';
 
 interface AlphabetFilterProps {
-  alphabet: string[];
   availableLetters: string[];
   selectedLetter: string;
   onLetterClick: (letter: string) => void;
   onClearFilter?: () => void;
 }
 
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
 export const AlphabetFilter: React.FC<AlphabetFilterProps> = ({
-  alphabet,
   availableLetters,
   selectedLetter,
   onLetterClick,
@@ -17,7 +17,7 @@ export const AlphabetFilter: React.FC<AlphabetFilterProps> = ({
 }) => {
   return (
     <div className="flex flex-wrap gap-3 mb-6">
-      {alphabet.map(letter => {
+      {ALPHABET.map(letter => {
         const isAvailable = availableLetters.includes(letter);
         const isSelected = selectedLetter === letter;
         return (

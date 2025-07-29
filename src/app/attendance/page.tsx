@@ -9,8 +9,6 @@ import { AlphabetFilter } from "@/components/attendance/AlphabetFilter";
 import { AttendanceHeader } from "@/components/attendance/AttendanceHeader";
 import { MemberList } from "@/components/attendance/MemberList";
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
 async function fetchMembers(): Promise<MemberCheckIn[]> {
   const res = await fetch("/api/attendance/members");
   if (!res.ok) throw new Error("Failed to fetch members");
@@ -44,7 +42,6 @@ export default function AttendancePage() {
 
   const handleCheckIn = async (memberId: string) => {
     try {
-      console.log("Toggling attendance for member ID:", memberId);
       const checkedIn = await toggleAttendance(memberId);
       setMembers(members =>
         members.map(m =>
@@ -52,7 +49,6 @@ export default function AttendancePage() {
         )
       );
     } catch (e: any) {
-      console.error("Check-in error:", e);
       setError(e.message);
     }
   };
@@ -107,7 +103,6 @@ export default function AttendancePage() {
             </div>
             
             <AlphabetFilter 
-              alphabet={ALPHABET} 
               availableLetters={availableLetters} 
               selectedLetter={selectedLetter} 
               onLetterClick={handleLetterClick} 
