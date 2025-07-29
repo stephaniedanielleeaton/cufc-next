@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMemberProfile } from "@/app/context/ProfileContext";
+import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
 
 export default function ProfileForm({ member }: { member: MemberProfileFormInput }) {
   const { refreshProfile } = useMemberProfile();
@@ -275,24 +276,4 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       </button>
     </form>
   );
-}
-
-export interface MemberProfileFormInput {
-  displayFirstName?: string;
-  displayLastName?: string;
-  profileComplete?: boolean;
-  personalInfo?: {
-    legalFirstName?: string;
-    legalLastName?: string;
-    email?: string;
-    phone?: string;
-    dateOfBirth?: string;
-    address?: {
-      street?: string;
-      city?: string;
-      state?: string;
-      zip?: string;
-      country?: string;
-    };
-  };
 }

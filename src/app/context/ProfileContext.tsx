@@ -9,7 +9,7 @@ import React, {
     useCallback,
   } from "react";
   import { useUser } from "@auth0/nextjs-auth0";
-  import { MemberProfileFormInput } from "@/components/ProfileForm"; // Or your canonical type
+  import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
   
   type MemberProfileContextType = {
     profile: MemberProfileFormInput | null;
