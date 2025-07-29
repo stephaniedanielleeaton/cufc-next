@@ -48,8 +48,9 @@ export default function AttendancePage() {
           m.id === memberId ? { ...m, isCheckedIn: checkedIn } : m
         )
       );
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e) {
+      const error = e instanceof Error ? e.message : 'An unknown error occurred';
+      setError(error);
     }
   };
 

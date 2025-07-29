@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import AttendancePage from './page';
 
 jest.mock('@/components/attendance/SearchBar', () => ({
-  SearchBar: ({ searchTerm, onSearch, placeholder }: any) => (
+  SearchBar: ({ searchTerm, onSearch, placeholder }: { searchTerm: string; onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder?: string }) => (
     <div data-testid="mock-search-bar">
       <input 
         data-testid="search-input" 
@@ -17,7 +17,7 @@ jest.mock('@/components/attendance/SearchBar', () => ({
 }));
 
 jest.mock('@/components/attendance/AlphabetFilter', () => ({
-  AlphabetFilter: ({ availableLetters, selectedLetter, onLetterClick, onClearFilter }: any) => (
+  AlphabetFilter: ({ availableLetters, onLetterClick, onClearFilter }: { availableLetters: string[]; selectedLetter?: string; onLetterClick: (letter: string) => void; onClearFilter?: () => void }) => (
     <div data-testid="mock-alphabet-filter">
       {availableLetters.map((letter: string) => (
         <button 
@@ -36,7 +36,7 @@ jest.mock('@/components/attendance/AlphabetFilter', () => ({
 }));
 
 jest.mock('@/components/attendance/AttendanceHeader', () => ({
-  AttendanceHeader: ({ title, totalCheckedIn }: any) => (
+  AttendanceHeader: ({ title, totalCheckedIn }: { title: string; totalCheckedIn: number }) => (
     <div data-testid="mock-attendance-header">
       <h1>{title}</h1>
       <span data-testid="total-checked-in">{totalCheckedIn}</span>
@@ -45,14 +45,14 @@ jest.mock('@/components/attendance/AttendanceHeader', () => ({
 }));
 
 jest.mock('@/components/attendance/MemberList', () => ({
-  MemberList: ({ members, onCheckIn, loading, error }: any) => (
+  MemberList: ({ members, loading, error, onCheckIn }: { members: { id: string; displayFirstName?: string; displayLastName?: string; isCheckedIn?: boolean }[]; loading: boolean; error: string | null; onCheckIn: (id: string) => void }) => (
     <div data-testid="mock-member-list">
       {loading && <div data-testid="loading">Loading...</div>}
-      {error && <div data-testid="error">{error}</div>}
+      {error && <div data-testid="error">{String(error)}</div>}
       {!loading && !error && members.length === 0 && (
         <div data-testid="empty">No members found</div>
       )}
-      {!loading && !error && members.map((member: any) => (
+      {!loading && !error && members.map((member) => (
         <div 
           key={member.id} 
           data-testid={`member-${member.id}`}
@@ -67,7 +67,9 @@ jest.mock('@/components/attendance/MemberList', () => ({
 }));
 
 jest.mock('@/hooks/useToggleAttendance', () => ({
-  useToggleAttendance: () => jest.fn().mockImplementation(async (memberId) => {
+  useToggleAttendance: () => jest.fn().mockImplementation(async (memberId: string) => {
+    // Using the memberId parameter to avoid unused variable warning
+    console.log(`Toggling attendance for member: ${memberId}`);
     return true;
   })
 }));

@@ -8,16 +8,17 @@ import type { IMemberProfile } from "@/lib/models/MemberProfile";
 export default function MembersPage() {
   const [search, setSearch] = useState("");
   const { data, error, isLoading } = useSWR("/api/members", (url) => fetch(url).then(res => res.json()));
-  const members: IMemberProfile[] = data?.members || [];
-
+  
+  // Define members inside useMemo to avoid dependency warning
   const filtered: IMemberProfile[] = useMemo(() => {
+    const members: IMemberProfile[] = data?.members || [];
     const q = search.toLowerCase();
     return members.filter((m) => {
       const first = m.displayFirstName || "";
       const last = m.displayLastName || "";
       return `${first} ${last}`.toLowerCase().includes(q);
     });
-  }, [members, search]);
+  }, [data, search]);
 
   if (isLoading) return <div className="text-center py-8 text-gray-400">Loading members...</div>;
   if (error) return <div className="text-center py-8 text-red-500">Error loading members. Please try again later.</div>;

@@ -1,26 +1,37 @@
 import React from "react";
+import type { IMemberProfile } from "@/lib/models/MemberProfile";
 
 interface MemberCardProps {
-  member: any;
+  member: IMemberProfile;
 }
 
 const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   const name = [member.displayFirstName, member.displayLastName].filter(Boolean).join(" ") || (
     <span className="text-gray-400 italic">N/A</span>
   );
-  const isSubscribed = member.subscriptionStatus === 'Active' || member.isSubscriptionActive;
-  const role = member.role;
+  
+  // These properties might be added to the member object by the API or other code
+  // We'll use type assertion to access them safely
+  const memberWithExtras = member as IMemberProfile & {
+    subscriptionStatus?: string;
+    isSubscriptionActive?: boolean;
+    role?: string;
+  };
+  
+  const isSubscribed = memberWithExtras.subscriptionStatus === 'Active' || memberWithExtras.isSubscriptionActive;
+  const role = memberWithExtras.role;
   const lastCheckIn = member.lastAttendanceCheckIn;
   const notes = member.notes;
+  
   // Only show green check or red exclamation icon
   const subIcon = isSubscribed || (role && role === 'coach') ? (
     <i className="fas fa-check-circle text-green-500 text-xl" title="Active subscription" />
   ) : (
     <i className="fas fa-exclamation-circle text-red-500 text-xl" title="Not subscribed" />
   );
-  const formatCheckInDate = (dateString: string) => {
-    if (!dateString) return 'Never';
-    const date = new Date(dateString);
+  
+  const formatCheckInDate = (date?: Date) => {
+    if (!date) return 'Never';
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
   return (
