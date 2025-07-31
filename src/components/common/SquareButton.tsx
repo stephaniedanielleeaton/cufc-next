@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-type ButtonVariant = "navy" | "mediumPink" | "transparent" | "white";
+type ButtonVariant = "navy" | "medium-pink" | "transparent" | "white";
 
 interface SquareButtonProps {
   href?: string;
@@ -28,7 +28,7 @@ export const SquareButton: React.FC<SquareButtonProps> = ({
   
   const variantClasses = {
     navy: "bg-navy text-white border-navy hover:bg-navy/90 hover:text-white focus:ring-navy focus:ring-offset-2",
-    mediumPink: "bg-mediumPink text-white border-mediumPink hover:bg-mediumPink/90 hover:text-white focus:ring-mediumPink focus:ring-offset-2",
+    "medium-pink": "bg-medium-pink text-white border-medium-pink hover:bg-medium-pink/90 hover:text-white focus:ring-medium-pink focus:ring-offset-2",
     transparent: "bg-transparent text-white border-white hover:bg-white/10 hover:text-white hover:border-white focus:ring-white focus:ring-offset-2",
     white: "bg-white text-navy border-navy hover:bg-gray-100 hover:text-navy focus:ring-navy focus:ring-offset-2"
   };
