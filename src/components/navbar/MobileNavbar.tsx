@@ -43,8 +43,8 @@ export function MobileNavbar({ user, isAdmin, displayName, profileComplete, menu
         <div className="flex items-center gap-2">
           <Image src="/pride-flag.svg" alt="Pride" width={28} height={28} />
           {user && (
-            <Link href="/profile" className="block md:hidden ml-2">
-              <UserAvatar picture={user.picture} alt="User Profile" size={32} className="hover:ring-2 hover:ring-blue-300 transition-all" />
+            <Link href="/dashboard" className="block md:hidden ml-2">
+              <UserAvatar picture={user.picture} alt="User Dashboard" size={32} className="hover:ring-2 hover:ring-blue-300 transition-all" />
             </Link>
           )}
         </div>
@@ -59,8 +59,8 @@ export function MobileNavbar({ user, isAdmin, displayName, profileComplete, menu
     <div className="flex flex-col items-center justify-center h-full w-full space-y-6">
       {/* User section at the top */}
       {user && (
-        <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex flex-col items-center group">
-          <UserAvatar picture={user.picture} alt="User Profile" size={40} className="group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
+        <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex flex-col items-center group">
+          <UserAvatar picture={user.picture} alt="User Dashboard" size={40} className="group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
           <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg flex items-center gap-1">
             {displayName || user.name || user.nickname || user.email}
             {!profileComplete && (

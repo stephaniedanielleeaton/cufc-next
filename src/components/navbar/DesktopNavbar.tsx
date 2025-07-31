@@ -37,10 +37,14 @@ export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUT
                   window.location.href = user ? AUTH_LOGOUT_PATH : AUTH_LOGIN_PATH;
                 }}
               />
-              <Link href="/profile" className="flex items-center gap-3 group">
-                <UserAvatar picture={user.picture} alt="User Profile" size={40} className="group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
-                <UserNameWithAlert displayName={displayName} user={user} profileComplete={profileComplete} className="group-hover:text-[#904F69]" />
-              </Link>
+              {user && (
+                <Link href="/dashboard" className="flex items-center gap-2 group">
+                  <UserAvatar picture={user.picture} alt="User Dashboard" size={32} className="group-hover:ring-2 group-hover:ring-blue-300 transition-all" />
+                  <span className="font-semibold group-hover:text-[#904F69] text-base">
+                    {displayName || user.name || user.nickname || user.email}
+                  </span>
+                </Link>
+              )}
             </>
           ) : (
             <>
