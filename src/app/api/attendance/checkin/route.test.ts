@@ -1,7 +1,6 @@
 /**
  * @jest-environment node
  */
-import { NextResponse } from 'next/server';
 import { POST } from './route';
 import { checkInMember } from '@/lib/services/attendance/checkIn';
 import { dbConnect } from '@/lib/mongoose';
