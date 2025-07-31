@@ -35,11 +35,9 @@ describe('MemberCard Component', () => {
 
     const button = container.querySelector('button');
     expect(button).toHaveAttribute('aria-pressed', 'true');
-    expect(button).toHaveStyle({
-      backgroundColor: 'var(--color-medium-pink)',
-      color: 'var(--color-light-gray)',
-    });
-    expect(button?.getAttribute('style')).toContain('border-color: var(--color-dark-red)');
+    expect(button).toHaveClass('bg-medium-pink');
+    expect(button).toHaveClass('border-dark-red');
+    expect(button).toHaveClass('text-light-gray');
 
     const checkmarkIcon = container.querySelector('svg');
     expect(checkmarkIcon).toBeInTheDocument();
