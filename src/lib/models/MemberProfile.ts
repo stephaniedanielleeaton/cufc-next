@@ -44,6 +44,7 @@ export interface IMemberProfile extends Document {
   profileComplete?: boolean;
   checkedIn?: boolean;
   lastCheckInDate?: Date;
+  hasCompletedIntro?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   squareCustomerId?: string;
@@ -60,6 +61,7 @@ const MemberProfileSchema = new Schema<IMemberProfile>({
   isPaymentWaived: { type: Boolean, default: false },
   notes: String,
   lastAttendanceCheckIn: Date,
+  hasCompletedIntro: { type: Boolean, default: false },
   profileComplete: { type: Boolean, default: false },
   checkedIn: { type: Boolean, default: false },
   lastCheckInDate: Date,

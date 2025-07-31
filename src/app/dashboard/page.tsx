@@ -87,7 +87,7 @@ export default function MemberDashboard() {
             <div className="flex items-start gap-3 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-900 px-4 py-3 rounded-md">
               <AlertCircle className="text-yellow-500 mt-0.5" size={24} />
               <span className="text-sm">
-                Your profile is incomplete. <Link href="/profile" className="underline font-medium hover:text-yellow-600">Update your profile</Link> to unlock all features.
+                Your profile is incomplete. <Link href="/profile" className="underline font-medium hover:text-yellow-600">Update your profile to continue.</Link>
               </span>
             </div>
           )}
