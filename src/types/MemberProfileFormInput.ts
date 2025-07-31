@@ -1,8 +1,10 @@
+import { MemberStatus } from "@/lib/types/MemberStatus";
+
 export interface MemberProfileFormInput {
     displayFirstName?: string;
     displayLastName?: string;
     profileComplete?: boolean;
-    hasCompletedIntro?: boolean;
+    memberStatus?: MemberStatus;
     personalInfo?: {
       legalFirstName?: string;
       legalLastName?: string;

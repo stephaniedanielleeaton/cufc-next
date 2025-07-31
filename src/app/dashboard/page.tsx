@@ -6,6 +6,8 @@ import { DashboardPaymentOptionsCard } from "./DashboardPaymentOptionsCard";
 import { DashboardIntroCourseCard } from "./DashboardIntroCourseCard";
 import { LastCheckInCard } from "./LastCheckInCard";
 
+import { MemberStatus } from "@/lib/types/MemberStatus";
+
 export default function MemberDashboard() {
   const { profile, loading, error } = useMemberProfile();
 
@@ -18,7 +20,7 @@ export default function MemberDashboard() {
       <div className="max-w-4xl mx-auto px-6 space-y-10 divide-y divide-gray-200">
         <DashboardWelcomeCard profile={profile} />
         {profile.profileComplete && (
-          profile.hasCompletedIntro ? (
+          profile.memberStatus === MemberStatus.Full ? (
             <DashboardPaymentOptionsCard />
           ) : (
             <DashboardIntroCourseCard />

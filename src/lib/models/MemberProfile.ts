@@ -30,6 +30,8 @@ const GuardianSchema = new Schema({
   lastName: String,
 }, { _id: false });
 
+import { MemberStatus } from "@/lib/types/MemberStatus";
+
 export interface IMemberProfile extends Document {
   auth0Id: string;
   displayFirstName?: string;
@@ -44,7 +46,7 @@ export interface IMemberProfile extends Document {
   profileComplete?: boolean;
   checkedIn?: boolean;
   lastCheckInDate?: Date;
-  hasCompletedIntro?: boolean;
+  memberStatus?: MemberStatus;
   createdAt?: Date;
   updatedAt?: Date;
   squareCustomerId?: string;
@@ -61,7 +63,7 @@ const MemberProfileSchema = new Schema<IMemberProfile>({
   isPaymentWaived: { type: Boolean, default: false },
   notes: String,
   lastAttendanceCheckIn: Date,
-  hasCompletedIntro: { type: Boolean, default: false },
+  memberStatus: { type: String, enum: ['New', 'Full'], default: 'New' },
   profileComplete: { type: Boolean, default: false },
   checkedIn: { type: Boolean, default: false },
   lastCheckInDate: Date,
