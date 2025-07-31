@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SquareButton from "@/components/SquareButton";
+import { SquareButton } from "@/components/common/SquareButton";
 
 export default function Hero() {
   return (
@@ -20,9 +20,19 @@ export default function Hero() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-center md:text-left drop-shadow-lg mb-6">
               Columbus Ohio&apos;s<br />Premier HEMA Club
             </h1>
-            <SquareButton href="/join" className="mt-2">
-              JOIN NOW
-            </SquareButton>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <SquareButton 
+                href="/join" 
+                variant="transparent"
+                className="mt-2"
+                style={{ 
+                  minWidth: 150,
+                  letterSpacing: '0.1em'
+                }}
+              >
+                JOIN NOW
+              </SquareButton>
+            </div>
           </div>
         </div>
       </div>
