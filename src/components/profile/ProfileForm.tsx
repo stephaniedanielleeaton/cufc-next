@@ -8,7 +8,27 @@ import { SquareButton } from "@/components/common/SquareButton";
 
 export default function ProfileForm({ member }: { member: MemberProfileFormInput }) {
   const { refreshProfile } = useMemberProfile();
-  const [formData, setFormData] = useState<MemberProfileFormInput>(member);
+  const [formData, setFormData] = useState<MemberProfileFormInput>(() => ({
+    displayFirstName: member.displayFirstName || "",
+    displayLastName: member.displayLastName || "",
+    personalInfo: {
+      legalFirstName: "",
+      legalLastName: "",
+      email: "",
+      phone: "",
+      dateOfBirth: "",
+      address: {
+        street: "",
+        city: "",
+        state: "",
+        zip: "",
+        country: "",
+        ...(member.personalInfo?.address || {}),
+      },
+      ...(member.personalInfo || {}),
+    },
+    ...member,
+  }));
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validate = () => {
@@ -96,7 +116,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl mx-auto bg-white px-8 py-8 space-y-4"
+      className="bg-white rounded-xl shadow-md px-6 py-8 space-y-6 border border-gray-100"
     >
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,7 +173,9 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       </div>
 
       <div className="mt-8">
-        <h3 className="text-xl font-medium text-gray-800 border-b pb-2 mb-4 tracking-wide">Address</h3>
+        <h3 className="text-base font-semibold text-gray-700 mb-2 tracking-wide uppercase">
+          Address
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextInput
             label="Street"
