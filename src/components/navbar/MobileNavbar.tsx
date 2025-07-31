@@ -1,4 +1,4 @@
-import { Menu, X } from "lucide-react";
+import { Menu, X, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { UserAvatar } from "./UserAvatar";
@@ -64,7 +64,7 @@ export function MobileNavbar({ user, isAdmin, displayName, profileComplete, menu
           <span className="mt-2 font-semibold group-hover:text-[#904F69] text-lg flex items-center gap-1">
             {displayName || user.name || user.nickname || user.email}
             {!profileComplete && (
-              <UserNameWithAlert displayName={displayName} user={user} profileComplete={profileComplete} />
+              <AlertCircle size={20} className="text-yellow-400 ml-1" aria-label="Profile incomplete" />
             )}
           </span>
         </Link>

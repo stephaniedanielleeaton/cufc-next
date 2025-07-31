@@ -29,9 +29,15 @@ export default function ProfilePage() {
     return <div className="p-4 text-red-600">No profile found for your account.</div>;
   }
 
+  const displayName = profile.displayFirstName && profile.displayLastName
+    ? `${profile.displayFirstName} ${profile.displayLastName}`
+    : profile.personalInfo?.legalFirstName && profile.personalInfo?.legalLastName
+    ? `${profile.personalInfo.legalFirstName} ${profile.personalInfo.legalLastName}`
+    : "Your Profile";
+    
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
+      <h1 className="text-2xl font-bold mb-4">{displayName}</h1>
       <ProfileForm member={profile} />
     </div>
   );

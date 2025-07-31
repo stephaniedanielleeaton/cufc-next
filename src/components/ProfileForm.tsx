@@ -96,10 +96,10 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl mx-auto mt-8 bg-white px-8 py-8 space-y-6"
+      className="max-w-3xl mx-auto mt-8 bg-white px-8 py-8 space-y-4"
     >
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextInput
           label="Display First Name"
           name="displayFirstName"
@@ -154,7 +154,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
 
       <div className="mt-8">
         <h3 className="text-xl font-medium text-gray-800 border-b pb-2 mb-4 tracking-wide">Address</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextInput
             label="Street"
             name="personalInfo.address.street"
