@@ -2,6 +2,7 @@ export interface MemberProfileFormInput {
     displayFirstName?: string;
     displayLastName?: string;
     profileComplete?: boolean;
+    hasCompletedIntro?: boolean;
     personalInfo?: {
       legalFirstName?: string;
       legalLastName?: string;
