@@ -6,9 +6,9 @@ import Link from "next/link";
 export function DashboardIntroCourseCard({ disabled }: { disabled?: boolean }) {
   if (disabled) {
     return (
-      <div className="bg-gradient-to-r from-green-100 via-blue-100 to-white border border-green-300 rounded-lg p-4 flex items-center justify-between shadow-sm">
+      <div className="border border-yellow-300 rounded-lg p-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="bg-green-400 text-white p-2 rounded-full">
+          <div className="bg-yellow-400 text-white p-2 rounded-full">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -36,3 +36,5 @@ export function DashboardIntroCourseCard({ disabled }: { disabled?: boolean }) {
     </Link>
   );
 }
+
+// https://dribbble.com/shots/23018747-fibr-app-profile-screens

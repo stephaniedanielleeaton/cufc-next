@@ -1,11 +1,19 @@
 "use client";
 
 import { useUser } from "@auth0/nextjs-auth0";
-import { AuthenticatedView } from "@/components/join/AuthenticatedView";
 import { UnauthenticatedView } from "@/components/join/UnauthenticatedView";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function JoinPage() {
   const { user, isLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/dashboard");
+    }
+  }, [user, router]);
 
   if (isLoading) {
     return (
@@ -19,5 +27,5 @@ export default function JoinPage() {
     return <UnauthenticatedView />;
   }
 
-  return <AuthenticatedView userName={user.name} />;
+  return null;
 }
