@@ -4,6 +4,7 @@ import {
   Link as LinkIcon,
   CreditCard,
   CalendarCheck,
+  ChevronRight,
 } from "lucide-react";
 
 interface DashboardToolCardProps {
@@ -35,6 +36,7 @@ export function DashboardToolCard({ label, icon, disabled = false }: DashboardTo
         <Icon className={`w-5 h-5 ${disabled ? "text-gray-300" : "text-gray-700"}`} />
         <span className={`text-sm font-medium ${disabled ? "text-gray-400" : ""}`}>{label}</span>
       </div>
+      {!disabled && <ChevronRight className="w-4 h-4 text-gray-400" />}
     </div>
   );
 }
