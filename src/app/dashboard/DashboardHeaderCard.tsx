@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
 import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
+import { AlertCircle } from "lucide-react";
 
 export function DashboardHeaderCard({ profile }: { profile: MemberProfileFormInput }) {
   const { user } = useUser();
@@ -16,8 +17,7 @@ export function DashboardHeaderCard({ profile }: { profile: MemberProfileFormInp
 
   return (
     <div className="flex flex-col items-center gap-3">
-
-      <div className="bg-gradient-to-tr from-green-400 via-blue-500 to-pink-500 p-1 rounded-full">
+      <div className="bg-gradient-to-tr from-green-400 via-blue-500 to-purple-500 p-1 rounded-full">
         <div className="bg-white p-1 rounded-full">
           <Image
             src={profileImage}
@@ -32,8 +32,11 @@ export function DashboardHeaderCard({ profile }: { profile: MemberProfileFormInp
       <h1 className="text-lg font-semibold text-gray-900">{displayName}</h1>
 
       <Link href="/profile">
-        <button className="px-4 py-1 text-blue-600 border border-blue-600 rounded-md text-sm font-semibold hover:bg-blue-50 transition">
+        <button className="relative flex items-center gap-1 px-4 py-1 text-blue-600 border border-blue-600 rounded-md text-sm font-semibold hover:bg-blue-50 transition">
           VIEW PROFILE
+          {!profile.profileComplete && (
+            <AlertCircle className="w-4 h-4 text-yellow-500" aria-label="Profile incomplete" />
+          )}
         </button>
       </Link>
     </div>

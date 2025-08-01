@@ -1,27 +1,39 @@
-import { Users, DollarSign, Link as LinkIcon, CreditCard,
-    CalendarCheck } from "lucide-react";
+import {
+  Users,
+  DollarSign,
+  Link as LinkIcon,
+  CreditCard,
+  CalendarCheck,
+} from "lucide-react";
 
 interface DashboardToolCardProps {
   label: string;
   icon: "users" | "dollar-sign" | "link" | "credit-card" | "calendar-check";
+  disabled?: boolean;
 }
 
 const iconMap = {
+  users: Users,
+  "dollar-sign": DollarSign,
+  link: LinkIcon,
   "credit-card": CreditCard,
   "calendar-check": CalendarCheck,
-  "users": Users,
-  "dollar-sign": DollarSign,
-  "link": LinkIcon,
 };
 
-export function DashboardToolCard({ label, icon }: DashboardToolCardProps) {
+export function DashboardToolCard({ label, icon, disabled = false }: DashboardToolCardProps) {
   const Icon = iconMap[icon];
 
   return (
-    <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-md cursor-pointer">
+    <div
+      className={`flex items-center justify-between px-2 py-2 rounded-md transition ${
+        disabled
+          ? "text-gray-400 cursor-not-allowed"
+          : "hover:bg-gray-50 cursor-pointer text-gray-800"
+      }`}
+    >
       <div className="flex items-center gap-3">
-        <Icon className="w-5 h-5 text-gray-700" />
-        <span className="text-sm text-gray-800 font-medium">{label}</span>
+        <Icon className={`w-5 h-5 ${disabled ? "text-gray-300" : "text-gray-700"}`} />
+        <span className={`text-sm font-medium ${disabled ? "text-gray-400" : ""}`}>{label}</span>
       </div>
     </div>
   );
