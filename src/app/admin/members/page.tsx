@@ -8,8 +8,18 @@ import type { IMemberProfile } from "@/lib/models/MemberProfile";
 export default function MembersPage() {
   const [search, setSearch] = useState("");
   const { data, error, isLoading } = useSWR("/api/members", (url) => fetch(url).then(res => res.json()));
-  
-  // Define members inside useMemo to avoid dependency warning
+  const { data: attendanceData, error: attendanceError, isLoading: attendanceLoading } = useSWR("/api/attendance/recent", (url) => fetch(url).then(res => res.json()));
+
+  const lastCheckInMap = useMemo(() => {
+    if (!attendanceData) return {};
+    const map: Record<string, string | null> = {};
+    attendanceData.forEach((item: { memberId: string; lastCheckIn: string | null }) => {
+      map[item.memberId] = item.lastCheckIn;
+    });
+    return map;
+  }, [attendanceData]);
+
+
   const filtered: IMemberProfile[] = useMemo(() => {
     const members: IMemberProfile[] = data?.members || [];
     const q = search.toLowerCase();
@@ -20,8 +30,8 @@ export default function MembersPage() {
     });
   }, [data, search]);
 
-  if (isLoading) return <div className="text-center py-8 text-gray-400">Loading members...</div>;
-  if (error) return <div className="text-center py-8 text-red-500">Error loading members. Please try again later.</div>;
+  if (isLoading || attendanceLoading) return <div className="text-center py-8 text-gray-400">Loading members...</div>;
+  if (error || attendanceError) return <div className="text-center py-8 text-red-500">Error loading members. Please try again later.</div>;
 
   return (
     <div>
@@ -30,7 +40,11 @@ export default function MembersPage() {
       </div>
       <div className="space-y-4">
         {filtered.map((member) => (
-          <MemberCard key={String(member._id)} member={member} />
+          <MemberCard
+            key={String(member._id)}
+            member={member}
+            lastCheckIn={lastCheckInMap[String(member._id)] ?? null}
+          />
         ))}
       </div>
     </div>

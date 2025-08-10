@@ -3,9 +3,10 @@ import type { IMemberProfile } from "@/lib/models/MemberProfile";
 
 interface MemberCardProps {
   member: IMemberProfile;
+  lastCheckIn?: Date | string | null;
 }
 
-const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
+const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn }) => {
   const name = [member.displayFirstName, member.displayLastName].filter(Boolean).join(" ") || (
     <span className="text-gray-400 italic">N/A</span>
   );
@@ -18,7 +19,11 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   
   const isSubscribed = memberWithExtras.subscriptionStatus === 'Active' || memberWithExtras.isSubscriptionActive;
   const role = memberWithExtras.role;
-  const lastCheckIn = member.lastAttendanceCheckIn;
+
+  let checkInDate: Date | undefined = undefined;
+  if (lastCheckIn) {
+    checkInDate = typeof lastCheckIn === 'string' ? new Date(lastCheckIn) : lastCheckIn;
+  }
   const notes = member.notes;
   
   const subIcon = isSubscribed || (role && role === 'coach') ? (
@@ -56,7 +61,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
       {/* Last Check-In */}
       <div className="flex-1 min-w-0 mt-2 sm:mt-0">
         <div className="text-sm text-gray-600">Last Check-In</div>
-        <div className="text-base text-gray-900">{formatCheckInDate(lastCheckIn)}</div>
+        <div className="text-base text-gray-900">{formatCheckInDate(checkInDate)}</div>
       </div>
       {/* Notes (only if present) */}
       {notes && (
