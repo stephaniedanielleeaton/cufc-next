@@ -10,8 +10,6 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
     <span className="text-gray-400 italic">N/A</span>
   );
   
-  // These properties might be added to the member object by the API or other code
-  // We'll use type assertion to access them safely
   const memberWithExtras = member as IMemberProfile & {
     subscriptionStatus?: string;
     isSubscriptionActive?: boolean;
@@ -23,11 +21,14 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   const lastCheckIn = member.lastAttendanceCheckIn;
   const notes = member.notes;
   
-  // Only show green check or red exclamation icon
   const subIcon = isSubscribed || (role && role === 'coach') ? (
     <i className="fas fa-check-circle text-green-500 text-xl" title="Active subscription" />
   ) : (
-    <i className="fas fa-exclamation-circle text-red-500 text-xl" title="Not subscribed" />
+    <i
+      className="fas fa-exclamation-circle text-red-500 text-xl"
+      title="Not subscribed"
+      aria-label="Not subscribed"
+    />
   );
   
   const formatCheckInDate = (date?: Date) => {
@@ -64,9 +65,16 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
           <div className="text-base text-gray-900">{notes}</div>
         </div>
       )}
-      {/* Status Icon */}
-      <div className="flex items-center justify-end min-w-[40px] ml-4">
+      {/* Status Icon and Waiver Icon */}
+      <div className="flex items-center justify-end min-w-[40px] ml-4 space-x-2">
         {subIcon}
+        {member.isWaiverOnFile !== true && (
+          <i
+            className="fas fa-file-alt text-red-500 text-xl"
+            title="Waiver not on file"
+            aria-label="Waiver not on file"
+          />
+        )}
       </div>
     </div>
   );
