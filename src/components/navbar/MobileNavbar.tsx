@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserAvatar } from "./UserAvatar";
 import { SignInOutButton } from "./SignInOutButton";
-import { UserNameWithAlert } from "./UserNameWithAlert";
 import { NavLinks } from "./NavLinks";
 import { AdminLink } from "./AdminLink";
 

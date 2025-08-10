@@ -20,7 +20,7 @@ export function LastCheckInCard() {
         } else {
           setLastCheckIn(null);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load check-in history.");
       } finally {
         setLoading(false);

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserAvatar } from "./UserAvatar";
 import { SignInOutButton } from "./SignInOutButton";
-import { UserNameWithAlert } from "./UserNameWithAlert";
 import { NavLinks } from "./NavLinks";
 import { AdminLink } from "./AdminLink";
 
@@ -22,7 +21,7 @@ type DesktopNavbarProps = {
   AUTH_LOGOUT_PATH: string;
 };
 
-export function DesktopNavbar({ user, isAdmin, displayName, profileComplete, AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH }: DesktopNavbarProps) {
+export function DesktopNavbar({ user, isAdmin, displayName, AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH }: DesktopNavbarProps) {
   return (
     <div className="hidden md:block w-full z-40">
       <div className="h-[58px] bg-navy text-white flex items-center justify-between px-12 py-1 font-khula font-normal leading-none tracking-[.1em]">

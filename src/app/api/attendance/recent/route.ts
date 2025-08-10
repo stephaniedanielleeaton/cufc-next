@@ -16,7 +16,7 @@ export async function GET() {
   try {
     await dbConnect();
     const members = await MemberProfile.find({}, { _id: 1 }).lean();
-    const memberIds = members.map((m: any) => m._id.toString());
+    const memberIds = members.map((m) => (typeof m._id === 'string' ? m._id : m._id?.toString())).filter(Boolean) as string[];
 
     const attendanceByMember = await Attendance.aggregate([
       { $match: { userId: { $in: memberIds } } },
@@ -25,7 +25,8 @@ export async function GET() {
     ]);
 
     const attendanceMap: Record<string, string> = {};
-    attendanceByMember.forEach((a: any) => {
+    type AttendanceAggregate = { _id: string; mostRecent: string };
+    (attendanceByMember as AttendanceAggregate[]).forEach((a) => {
       attendanceMap[a._id] = a.mostRecent;
     });
 

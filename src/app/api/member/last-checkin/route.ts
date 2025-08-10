@@ -14,7 +14,7 @@ async function getLastAttendanceByMemberId(memberId: string) {
     .lean();
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await dbConnect();
     const session = await auth0.getSession();
