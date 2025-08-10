@@ -3,5 +3,4 @@ export type MemberCheckIn = {
   displayFirstName?: string;
   displayLastName?: string;
   isCheckedIn: boolean;
-  isWaiverOnFile: boolean;
 };
