@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import MemberCard from "./MemberCard";
-import SearchBox from "./SearchBox";
+import MemberCard from "@/components/admin/members/MemberCard";
+import SearchBox from "@/components/admin/members/SearchBox";
 import useSWR from "swr";
 import type { IMemberProfile } from "@/lib/models/MemberProfile";
 
