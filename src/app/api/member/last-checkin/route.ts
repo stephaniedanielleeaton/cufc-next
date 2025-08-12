@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth0 } from "@/lib/auth/auth0";
 import { dbConnect } from "@/lib/mongoose";
 import { Attendance } from "@/lib/models/Attendance";
