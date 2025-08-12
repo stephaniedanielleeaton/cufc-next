@@ -30,6 +30,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
   }
   const notes = member.notes;
 
+  // Desktop/tablet status icon (keeps green check)
   const subIcon =
     isSubscribed || (role && role === "coach") ? (
       <i className="fas fa-check-circle text-green-500 text-xl" title="Active subscription" />
@@ -41,6 +42,26 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
       />
     );
 
+  // Mobile: only show alert icons (no green check)
+  const mobileAlertIcons = (
+    <div className="flex items-center gap-2">
+      {!isSubscribed && (
+        <i
+          className="fas fa-exclamation-circle text-red-500 text-lg"
+          title="Not subscribed"
+          aria-label="Not subscribed"
+        />
+      )}
+      {member.isWaiverOnFile !== true && (
+        <i
+          className="fas fa-file-alt text-red-500 text-lg"
+          title="Waiver not on file"
+          aria-label="Waiver not on file"
+        />
+      )}
+    </div>
+  );
+
   const formatCheckInDate = (date?: Date) => {
     if (!date) return "Never";
     return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
@@ -51,52 +72,66 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
       type="button"
       onClick={onToggle}
       aria-expanded={!!isExpanded}
-      className={`text-left w-full bg-white rounded-lg shadow-sm border border-gray-200 mb-2 p-6 flex flex-col sm:flex-row sm:items-center hover:shadow transition-shadow ${
+      className={`text-left w-full bg-white rounded-lg shadow-sm border border-gray-200 mb-2 p-4 sm:p-6 hover:shadow transition-shadow ${
         isExpanded ? "ring-2 ring-blue-200" : ""
       }`}
     >
-      {/* Name and Role */}
-      <div className="flex-1 min-w-0">
-        <div className="font-semibold text-lg text-gray-900">{name}</div>
-        {role && <div className="text-sm text-gray-500">{role}</div>}
-      </div>
-
-      {/* Subscription Status */}
-      <div className="flex-1 min-w-0 mt-2 sm:mt-0">
-        <div className="text-sm text-gray-600">Subscription Status</div>
-        <div className="text-base text-gray-900">
-          {!isSubscribed ? "Not enrolled in a monthly plan" : "Active"}
+      {/* MOBILE: simple header (name + alert icons + chevron) */}
+      <div className="sm:hidden space-y-1">
+        <div className="flex items-center justify-between gap-2">
+          <div className="font-semibold text-lg text-gray-900 truncate">{name}</div>
+          <div className="flex items-center gap-2">
+            {mobileAlertIcons}
+          </div>
         </div>
-      </div>
 
-      {/* Last Check-In */}
-      <div className="flex-1 min-w-0 mt-2 sm:mt-0">
-        <div className="text-sm text-gray-600">Last Check-In</div>
-        <div className="text-base text-gray-900">{formatCheckInDate(checkInDate)}</div>
-      </div>
-
-      {/* Notes (only if present) */}
-      {notes && (
-        <div className="flex-1 min-w-0 mt-2 sm:mt-0">
-          <div className="text-sm text-gray-600">Notes</div>
-          <div className="text-base text-gray-900">{notes}</div>
-        </div>
-      )}
-
-      {/* Status Icon and Waiver Icon */}
-      <div className="flex items-center justify-end min-w-[40px] ml-4 space-x-2">
-        {subIcon}
-        {member.isWaiverOnFile !== true && (
-          <i
-            className="fas fa-file-alt text-red-500 text-xl"
-            title="Waiver not on file"
-            aria-label="Waiver not on file"
-          />
+        {/* Only show this line on mobile when NOT subscribed */}
+        {!isSubscribed && (
+          <div className="text-sm text-gray-600">Not enrolled in a monthly plan</div>
         )}
-        <i
-          className={`fas fa-chevron-${isExpanded ? "up" : "down"} text-gray-400 text-lg`}
-          aria-hidden
-        />
+      </div>
+
+      {/* DESKTOP/TABLET: full info row */}
+      <div className="hidden sm:flex sm:items-center sm:gap-4">
+        {/* Name & role */}
+        <div className="flex-1 min-w-0">
+          <div className="font-semibold text-lg text-gray-900 truncate">{name}</div>
+          {role && <div className="text-sm text-gray-500">{role}</div>}
+        </div>
+
+        {/* Subscription Status */}
+        <div className="flex-1 min-w-0">
+          <div className="text-sm text-gray-600">Subscription Status</div>
+          <div className="text-base text-gray-900">
+            {!isSubscribed ? "Not enrolled in a monthly plan" : "Active"}
+          </div>
+        </div>
+
+        {/* Last Check-In */}
+        <div className="flex-1 min-w-0">
+          <div className="text-sm text-gray-600">Last Check-In</div>
+          <div className="text-base text-gray-900">{formatCheckInDate(checkInDate)}</div>
+        </div>
+
+        {/* Notes (only if present) */}
+        {notes && (
+          <div className="flex-1 min-w-0">
+            <div className="text-sm text-gray-600">Notes</div>
+            <div className="text-base text-gray-900 truncate">{notes}</div>
+          </div>
+        )}
+
+        {/* Icons */}
+        <div className="flex items-center justify-end min-w-[40px] ml-2 space-x-2">
+          {subIcon}
+          {member.isWaiverOnFile !== true && (
+            <i
+              className="fas fa-file-alt text-red-500 text-xl"
+              title="Waiver not on file"
+              aria-label="Waiver not on file"
+            />
+          )}
+        </div>
       </div>
     </button>
   );

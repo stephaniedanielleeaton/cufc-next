@@ -117,7 +117,7 @@ export default function MemberDetailsInline({ member }: Props) {
 
           <Section title="Status & Flags">
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+    {/* Left: all toggles together */}
     <div className="space-y-3">
       <Toggle
         label="Profile complete"
