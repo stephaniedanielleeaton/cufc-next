@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { MemberProfileDTO } from "@/lib/types/MemberProfile";
+import type { MemberProfileDTO } from "@/types/MemberProfile";
 import { TextInput } from "@/components/common/TextInput";
 import { Dropdown } from "@/components/common/Dropdown";
 

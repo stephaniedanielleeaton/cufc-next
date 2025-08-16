@@ -5,7 +5,7 @@ import MemberCard from "@/components/admin/members/MemberCard";
 import MemberDetailsInline from "@/components/admin/members/MemberDetailsInline";
 import SearchBox from "@/components/admin/members/SearchBox";
 import useSWR from "swr";
-import type { MemberProfileDTO } from "@/lib/types/MemberProfile";
+import type { MemberProfileDTO } from "@/types/MemberProfile";
 
 export default function MembersPage() {
   const [search, setSearch] = useState("");

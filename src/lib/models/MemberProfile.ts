@@ -30,7 +30,7 @@ const GuardianSchema = new Schema({
   lastName: String,
 }, { _id: false });
 
-import { MemberStatus } from "@/lib/types/MemberStatus";
+import { MemberStatus } from "@/types/MemberStatus";
 
 export interface IMemberProfile extends Document {
   auth0Id: string;

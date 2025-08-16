@@ -1,4 +1,4 @@
-import type { MemberStatus } from "@/lib/types/MemberStatus";
+import type { MemberStatus } from "@/types/MemberStatus";
 
 export type Address = {
   street?: string;

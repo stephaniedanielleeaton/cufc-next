@@ -6,7 +6,7 @@ import { DashboardSubscriptionCard } from "./DashboardSubscriptionCard";
 import { DashboardToolCard } from "./DashboardToolCard";
 import { LastCheckInCard } from "./LastCheckInCard";
 import { DashboardIntroCourseCard } from "./DashboardIntroCourseCard";
-import { MemberStatus } from "@/lib/types/MemberStatus"
+import { MemberStatus } from "@/types/MemberStatus"
 
 export default function MemberDashboard() {
   const { profile, loading, error } = useMemberProfile();

@@ -1,4 +1,4 @@
-import { MemberStatus } from "@/lib/types/MemberStatus";
+import { MemberStatus } from "@/types/MemberStatus";
 
 export interface MemberProfileFormInput {
     displayFirstName?: string;
