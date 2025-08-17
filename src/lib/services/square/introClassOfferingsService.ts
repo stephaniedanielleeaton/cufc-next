@@ -1,6 +1,7 @@
 import { SquareService } from "./squareService";
 import { Square } from "square";
 import { IntroClassDTO, VariationDTO } from "@/types/IntroClassDTO";
+import { INTRO_CLASS_CATALOG_OBJECT_ID } from "../../../lib/constants"
 
 export class IntroClassOfferingsService {
   private squareService: SquareService;
@@ -11,10 +12,10 @@ export class IntroClassOfferingsService {
 
   async getIntroClassOfferings(): Promise<IntroClassDTO> {
     const catalogResponse: Square.GetCatalogObjectResponse =
-      await this.squareService.getIntroClassOfferingsFromSquare();
+      await this.squareService.getCatalogObjectById(INTRO_CLASS_CATALOG_OBJECT_ID);
 
     const inventoryCounts: Square.InventoryCount[] =
-      await this.squareService.getInventoryByCatalogObjectId();
+      await this.squareService.getInventoryByCatalogObjectId(INTRO_CLASS_CATALOG_OBJECT_ID);
 
     return this.mapOfferingsToDTO(catalogResponse, inventoryCounts);
   }
@@ -24,7 +25,7 @@ export class IntroClassOfferingsService {
     inventoryCounts: Square.InventoryCount[]
   ): IntroClassDTO {
     const catalogObject = catalogResponse.object;
-    if (!catalogObject) throw new Error("Square response missing catalog object");
+   if (!catalogObject) throw new Error("Square response missing catalog object");
     if (!this.isCatalogItem(catalogObject)) {
       throw new Error(`Expected ITEM, but got ${catalogObject.type}`);
     }

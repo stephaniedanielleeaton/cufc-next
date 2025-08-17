@@ -6,7 +6,6 @@ import { SquareClient, Square } from 'square';
  */
 export class SquareService {
   private client: SquareClient;
-  private readonly INTRO_CLASS_CATALOG_OBJECT_ID = 'HSHTGZJIN54744UBG7UMBN24';
   private readonly RETAIL_LOCATION_ID = process.env.SQUARE_RETAIL_LOCATION_ID || '';
 
   constructor() {
@@ -20,10 +19,10 @@ export class SquareService {
     console.error('Square API Error:', error);
   }
 
-  async getIntroClassOfferingsFromSquare(): Promise<Square.GetCatalogObjectResponse> {
+  async getCatalogObjectById(catalogObjectId: string ): Promise<Square.GetCatalogObjectResponse> {
     try {
       const response = await this.client.catalog.object.get({
-        objectId: this.INTRO_CLASS_CATALOG_OBJECT_ID,
+        objectId: catalogObjectId,
       });
       return response;
     } catch (error) {
@@ -35,10 +34,10 @@ export class SquareService {
   /**
    * Get inventory counts for a catalog object by ID
    */
-  async getInventoryByCatalogObjectId(): Promise<Square.InventoryCount[]> {
+  async getInventoryByCatalogObjectId(catalogObjectId: string): Promise<Square.InventoryCount[]> {
     try {
       const response = await this.client.inventory.batchGetCounts({
-        catalogObjectIds: [this.INTRO_CLASS_CATALOG_OBJECT_ID],
+        catalogObjectIds: [catalogObjectId],
         locationIds: [this.RETAIL_LOCATION_ID]
       });
       
