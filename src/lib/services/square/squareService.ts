@@ -47,4 +47,27 @@ export class SquareService {
       throw error;
     }
   }
+
+  async getIntroClassCheckout(catalogObjectId: string, memberProfileId: string): Promise<string> {
+    try {
+      const response = await this.client.checkout.paymentLinks.create({
+        order: {
+          locationId: this.RETAIL_LOCATION_ID,
+          lineItems: [
+            {
+              catalogObjectId,
+              quantity: "1",
+              metadata: {
+                "memberProfileId":memberProfileId
+              }
+            }
+          ]
+        }
+      });
+      return response.paymentLink?.url ?? "";
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
 }

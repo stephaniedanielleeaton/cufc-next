@@ -18,8 +18,8 @@ export async function GET() {
     return NextResponse.json({ error: "Profile not found" }, { status: 404 });
   }
 
-  // Only return personal info fields
   return NextResponse.json({
+    profileId: member._id,
     displayFirstName: member.displayFirstName,
     displayLastName: member.displayLastName,
     personalInfo: member.personalInfo,
