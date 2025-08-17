@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useIntroClassOfferings } from '@/hooks/useIntroClassOfferings';
-import { VariationDTO } from '@/types/IntroClassDTO';
 
 export const IntroClassOfferings: React.FC = () => {
   const { introClassData, isLoading, error } = useIntroClassOfferings();
@@ -81,7 +80,7 @@ export const IntroClassOfferings: React.FC = () => {
             </svg>
           </button>
           <p className="text-xs text-center text-gray-500 mt-1">
-            You'll select your preferred date at checkout
+            You&apos;ll select your preferred date at checkout
           </p>
         </div>
       </div>

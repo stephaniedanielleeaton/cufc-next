@@ -1,7 +1,6 @@
 "use client";
 
 import { BookOpen, ChevronRight, AlertTriangle } from "lucide-react";
-import Link from "next/link";
 
 interface DashboardIntroCourseCardProps {
   disabled?: boolean;

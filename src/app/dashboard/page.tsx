@@ -10,7 +10,6 @@ import { MemberStatus } from "@/types/MemberStatus";
 import { useState } from "react";
 import { IntroClassOfferings } from "@/components/intro-classes/IntroClassOfferings";
 import ProfileForm from "@/components/profile/ProfileForm";
-import { ProfileHeader } from "@/components/profile/ProfileHeader";
 
 export default function MemberDashboard() {
   const { profile, loading, error } = useMemberProfile();
