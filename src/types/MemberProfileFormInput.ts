@@ -1,6 +1,7 @@
 import { MemberStatus } from "@/types/MemberStatus";
 
 export interface MemberProfileFormInput {
+    profileId?: string;
     displayFirstName?: string;
     displayLastName?: string;
     profileComplete?: boolean;

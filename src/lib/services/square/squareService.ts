@@ -48,7 +48,11 @@ export class SquareService {
     }
   }
 
-  async getIntroClassCheckout(catalogObjectId: string, memberProfileId: string): Promise<string> {
+
+/**
+   * Get Checkout URL for a given catalog object variant ID and member profile ID
+   */
+  async getSingleVariantCheckout(catalogObjectId: string, memberProfileId: string): Promise<string> {
     try {
       const response = await this.client.checkout.paymentLinks.create({
         order: {
