@@ -3,7 +3,12 @@
 import { BookOpen, ChevronRight, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 
-export function DashboardIntroCourseCard({ disabled }: { disabled?: boolean }) {
+interface DashboardIntroCourseCardProps {
+  disabled?: boolean;
+  onEnroll?: () => void;
+}
+
+export function DashboardIntroCourseCard({ disabled, onEnroll }: DashboardIntroCourseCardProps) {
   if (disabled) {
     return (
       <div className="border border-yellow-300 rounded-lg p-4 flex items-center justify-between shadow-sm">
@@ -23,17 +28,24 @@ export function DashboardIntroCourseCard({ disabled }: { disabled?: boolean }) {
     );
   }
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (onEnroll) {
+      e.preventDefault();
+      onEnroll();
+    }
+  };
+
   return (
-    <Link
-      href="/intro"
-      className="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg p-4 flex items-center justify-between shadow-md transition hover:brightness-105"
+    <div 
+      onClick={handleClick}
+      className="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg p-4 flex items-center justify-between shadow-md transition hover:brightness-105 cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <BookOpen className="w-6 h-6" />
         <div className="text-sm font-semibold">Sign Up For An Intro Class</div>
       </div>
       <ChevronRight className="w-5 h-5 text-white" />
-    </Link>
+    </div>
   );
 }
 
