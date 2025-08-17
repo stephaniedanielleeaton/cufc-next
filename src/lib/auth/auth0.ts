@@ -5,4 +5,9 @@ export const auth0 = new Auth0Client({
     scope: "openid profile email",
     audience: "columbusunitedfencing.com",
   },
+  routes: {
+    callback: "/api/auth/callback",
+    login: "/api/auth/login",
+    postLoginRedirect: "/dashboard"
+  },
 });

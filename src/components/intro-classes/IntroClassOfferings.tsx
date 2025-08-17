@@ -2,11 +2,15 @@
 
 import React from 'react';
 import { useIntroClassOfferings } from '@/hooks/useIntroClassOfferings';
+import { useMemberProfile } from '@/app/context/ProfileContext';
+import { useUser } from '@auth0/nextjs-auth0';
 
 export const IntroClassOfferings: React.FC = () => {
   const { introClassData, isLoading, error } = useIntroClassOfferings();
+  const { user, isLoading: userLoading } = useUser();
+  const { profile, loading: profileLoading } = useMemberProfile();
 
-  if (isLoading) {
+  if (isLoading || userLoading || profileLoading) {
     return (
       <div className="flex justify-center items-center min-h-[300px]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-medium-pink"></div>
@@ -33,6 +37,9 @@ export const IntroClassOfferings: React.FC = () => {
   const hasAvailableSpots = introClassData.variations?.some(variation => 
     parseInt(variation.quantity || '0') > 0
   );
+  
+  const isLoggedIn = !!user;
+  const hasCompleteProfile = !!profile?.profileComplete;
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -70,18 +77,44 @@ export const IntroClassOfferings: React.FC = () => {
         )}
         
         <div className="mt-4">
-          <button 
-            className="w-full bg-medium-pink hover:bg-dark-red text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center text-sm"
-            disabled={!hasAvailableSpots}
-          >
-            <span className="mr-2">Enroll Now</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <p className="text-xs text-center text-gray-500 mt-1">
-            You&apos;ll select your preferred date at checkout
-          </p>
+          {!isLoggedIn ? (
+            <a href="/api/auth/login" className="block w-full">
+              <button 
+                className="w-full bg-navy hover:bg-blue-800 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center text-sm"
+              >
+                <span className="mr-2">Sign In to Enroll</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </a>
+          ) : !hasCompleteProfile ? (
+            <a href="/profile" className="block w-full">
+              <button 
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center text-sm"
+              >
+                <span className="mr-2">Complete Profile to Enroll</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </a>
+          ) : (
+            <button 
+              className="w-full bg-medium-pink hover:bg-dark-red text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center text-sm"
+              disabled={!hasAvailableSpots}
+            >
+              <span className="mr-2">Enroll Now</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
+          {isLoggedIn && hasCompleteProfile && (
+            <p className="text-xs text-center text-gray-500 mt-1">
+              You&apos;ll select your preferred date at checkout
+            </p>
+          )}
         </div>
       </div>
     </div>

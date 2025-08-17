@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemberProfile } from "@/app/context/ProfileContext";
-import { DashboardHeaderCard } from "./DashboardHeaderCard";
-import { DashboardSubscriptionCard } from "./DashboardSubscriptionCard";
-import { DashboardToolCard } from "./DashboardToolCard";
-import { LastCheckInCard } from "./LastCheckInCard";
-import { DashboardIntroCourseCard } from "./DashboardIntroCourseCard";
+import { DashboardHeaderCard } from "../../components/dashboard/DashboardHeaderCard";
+import { DashboardSubscriptionCard } from "../../components/dashboard/DashboardSubscriptionCard";
+import { DashboardToolCard } from "../../components/dashboard/DashboardToolCard";
+import { LastCheckInCard } from "../../components/dashboard/LastCheckInCard";
+import { DashboardIntroCourseCard } from "../../components/dashboard/DashboardIntroCourseCard";
 import { MemberStatus } from "@/types/MemberStatus";
 import { useState } from "react";
 import { IntroClassOfferings } from "@/components/intro-classes/IntroClassOfferings";
