@@ -4,7 +4,12 @@ import { useUser } from "@auth0/nextjs-auth0";
 import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
 import { AlertCircle } from "lucide-react";
 
-export function DashboardHeaderCard({ profile }: { profile: MemberProfileFormInput }) {
+interface DashboardHeaderCardProps {
+  profile: MemberProfileFormInput;
+  onEditProfile?: () => void;
+}
+
+export function DashboardHeaderCard({ profile, onEditProfile }: DashboardHeaderCardProps) {
   const { user } = useUser();
 
   const displayName = profile.displayFirstName && profile.displayLastName
@@ -31,14 +36,28 @@ export function DashboardHeaderCard({ profile }: { profile: MemberProfileFormInp
 
       <h1 className="text-lg font-semibold text-gray-900">{displayName}</h1>
 
-      <Link href="/profile">
-        <button className="relative flex items-center gap-1 px-4 py-1 text-blue-600 border border-blue-600 rounded-md text-sm font-semibold hover:bg-blue-50 transition">
-          VIEW PROFILE
-          {!profile.profileComplete && (
-            <AlertCircle className="w-4 h-4 text-yellow-500" aria-label="Profile incomplete" />
-          )}
-        </button>
-      </Link>
+      <div className="flex gap-2">
+        {onEditProfile ? (
+          <button 
+            onClick={onEditProfile}
+            className="relative flex items-center gap-1 px-4 py-1 text-blue-600 border border-blue-600 rounded-md text-sm font-semibold hover:bg-blue-50 transition"
+          >
+            EDIT PROFILE
+            {!profile.profileComplete && (
+              <AlertCircle className="w-4 h-4 text-yellow-500" aria-label="Profile incomplete" />
+            )}
+          </button>
+        ) : (
+          <Link href="/profile">
+            <button className="relative flex items-center gap-1 px-4 py-1 text-blue-600 border border-blue-600 rounded-md text-sm font-semibold hover:bg-blue-50 transition">
+              VIEW PROFILE
+              {!profile.profileComplete && (
+                <AlertCircle className="w-4 h-4 text-yellow-500" aria-label="Profile incomplete" />
+              )}
+            </button>
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

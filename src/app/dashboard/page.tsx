@@ -9,10 +9,13 @@ import { DashboardIntroCourseCard } from "./DashboardIntroCourseCard";
 import { MemberStatus } from "@/types/MemberStatus";
 import { useState } from "react";
 import { IntroClassOfferings } from "@/components/intro-classes/IntroClassOfferings";
+import ProfileForm from "@/components/profile/ProfileForm";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
 
 export default function MemberDashboard() {
   const { profile, loading, error } = useMemberProfile();
   const [showIntroClasses, setShowIntroClasses] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
 
   if (loading) return <div className="p-6">Loading...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
@@ -22,16 +25,26 @@ export default function MemberDashboard() {
   
   const handleShowIntroClasses = () => {
     setShowIntroClasses(true);
+    setShowProfileEdit(false);
+  };
+  
+  const handleShowProfileEdit = () => {
+    setShowProfileEdit(true);
+    setShowIntroClasses(false);
   };
   
   const handleBackToDashboard = () => {
     setShowIntroClasses(false);
+    setShowProfileEdit(false);
   };
 
   return (
     <div className="bg-gray-50 min-h-screen py-10">
       <div className="max-w-md mx-auto px-4 space-y-6">
-        <DashboardHeaderCard profile={profile} />
+        <DashboardHeaderCard 
+          profile={profile} 
+          onEditProfile={handleShowProfileEdit}
+        />
         
         {showIntroClasses ? (
           <>
@@ -47,6 +60,23 @@ export default function MemberDashboard() {
               </button>
             </div>
             <IntroClassOfferings />
+          </>
+        ) : showProfileEdit ? (
+          <>
+            <div className="mb-4">
+              <button 
+                onClick={handleBackToDashboard}
+                className="flex items-center text-sm text-navy hover:text-medium-pink transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+                Back to Dashboard
+              </button>
+            </div>
+            <div className="space-y-6">
+              <ProfileForm member={profile} />
+            </div>
           </>
         ) : (
           <>
