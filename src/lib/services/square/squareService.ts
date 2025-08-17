@@ -1,6 +1,5 @@
-import { SquareCatalogObjectResponse } from '@/types/Square/SquareCatalogObjectResponse';
-import { SquareClient } from 'square';
-import type { SquareInventoryCountsResponse } from '@/types/Square/SquareInventoryCountsResponse';
+import { SquareClient, Square } from 'square';
+
 
 /**
  * Service for interacting with the Square API
@@ -16,25 +15,19 @@ export class SquareService {
     });
   }
 
-  /**
-   * Helper function to handle BigInt serialization in Square API responses
-   */
-  private handleBigIntSerialization(data: any): any {
-    return data;
-  }
 
-  private logError(error: any): void {
+  private logError(error: string): void {
     console.error('Square API Error:', error);
   }
 
-  async getIntroClassOfferingsFromSquare(): Promise<SquareCatalogObjectResponse> {
+  async getIntroClassOfferingsFromSquare(): Promise<Square.GetCatalogObjectResponse> {
     try {
       const response = await this.client.catalog.object.get({
         objectId: this.INTRO_CLASS_CATALOG_OBJECT_ID,
       });
-      return this.handleBigIntSerialization(response);
+      return response;
     } catch (error) {
-      this.logError(error);
+      this.logError(error as string);
       throw error;
     }
   }
@@ -42,16 +35,16 @@ export class SquareService {
   /**
    * Get inventory counts for a catalog object by ID
    */
-  async getInventoryByCatalogObjectId(): Promise<SquareInventoryCountsResponse> {
+  async getInventoryByCatalogObjectId(): Promise<Square.InventoryCount[]> {
     try {
       const response = await this.client.inventory.batchGetCounts({
         catalogObjectIds: [this.INTRO_CLASS_CATALOG_OBJECT_ID],
         locationIds: [this.RETAIL_LOCATION_ID]
       });
       
-      return this.handleBigIntSerialization(response.data);
+      return response.data;
     } catch (error) {
-      this.logError(error);
+      this.logError(error as string);
       throw error;
     }
   }

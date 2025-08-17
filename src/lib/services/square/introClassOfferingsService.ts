@@ -1,12 +1,8 @@
+import { SquareService } from "./squareService";
+import { Square } from "square";
+import { IntroClassDTO, VariationDTO } from "@/types/IntroClassDTO";
 
-import { SquareService } from './squareService';
-import type { IntroClassDTO, VariationDTO } from '@/types/IntroClassDTO';
-import type { SquareCatalogObjectResponse, ItemVariation } from '@/types/Square/SquareCatalogObjectResponse';
-import type { SquareInventoryCountsResponse } from '@/types/Square/SquareInventoryCountsResponse';
 
-/**
- * Service for handling intro class offerings data from Square
- */
 export class IntroClassOfferingsService {
   private squareService: SquareService;
 
@@ -14,58 +10,92 @@ export class IntroClassOfferingsService {
     this.squareService = new SquareService();
   }
 
-  /**
-   * Get intro class offerings from Square
-   * @returns {Promise<Object>} The intro class offerings data with inventory counts
-   */
-  async getIntroClassOfferings() {
-    try {
-      const offeringsData: SquareCatalogObjectResponse = await this.squareService.getIntroClassOfferingsFromSquare()
-      const inventoryCounts: SquareInventoryCountsResponse = await this.squareService.getInventoryByCatalogObjectId()
+  async getIntroClassOfferings(): Promise<IntroClassDTO> {
+    const catalogResponse: Square.GetCatalogObjectResponse =
+      await this.squareService.getIntroClassOfferingsFromSquare();
 
-      return this.mapOfferingsToDTO(offeringsData, inventoryCounts);
+    const inventoryCounts: Square.InventoryCount[] =
+      await this.squareService.getInventoryByCatalogObjectId();
 
-    } catch (error) {
-      console.error('Error fetching intro class offerings:', error);
-      throw error;
-    }
+    return this.mapOfferingsToDTO(catalogResponse, inventoryCounts);
   }
 
-  async mapOfferingsToDTO(offeringsData: SquareCatalogObjectResponse, inventoryCounts: SquareInventoryCountsResponse) {
-      
-    let introClassOfferings: IntroClassDTO[] = [];
+  private mapOfferingsToDTO(
+    catalogResponse: Square.GetCatalogObjectResponse,
+    inventoryCounts: Square.InventoryCount[]
+  ): IntroClassDTO {
+    const catalogObject = catalogResponse.object;
+    if (!catalogObject) throw new Error("Square response missing catalog object");
+    if (!this.isCatalogItem(catalogObject)) throw new Error(`Expected ITEM, but got ${catalogObject.type}`);
+  
+    const itemData = catalogObject.itemData ?? {};
+  
+    const allVariations = itemData.variations ?? [];
+    const itemVariations = allVariations.filter(this.isItemVariation);
+  
+    const simplifiedVariations = this.mapSimplifiedVariations(itemVariations, inventoryCounts);
+  
+    const introClass: IntroClassDTO = {
+      id: catalogObject.id,
+      name: itemData.name ?? "",
+      description: itemData.descriptionPlaintext ?? itemData.description ?? "",
+      variations: simplifiedVariations,
+    };
+  
+    return introClass;
+  }
+  
 
-    introClassOfferings.push({
-      id: offeringsData.object.id,
-      name: offeringsData.object.itemData.name,
-      description: offeringsData.object.itemData.description,
-      variations: this.mapSimplifiedVariations(offeringsData.object.itemData.variations, inventoryCounts),
-    });
-
-    return introClassOfferings;
-}
-
- mapSimplifiedVariations(offeringsDataVariations: ItemVariation[], inventoryCounts: SquareInventoryCountsResponse) {
-    let variations: VariationDTO[] = [];
-    for (const variation of offeringsDataVariations) {
-        variations.push({
-            id: variation.id,
-            name: variation.itemVariationData.name,
-            quantity: this.mapInventoryCountsToDTO(variation.id, inventoryCounts),
-            price: { amount: Number(variation.itemVariationData.priceMoney.amount), currency: 'USD' },
-        });
+  private mapSimplifiedVariations(
+    squareVariations: Square.CatalogObject.ItemVariation[],
+    inventoryCounts: Square.InventoryCount[]
+  ): VariationDTO[] {
+    const quantityByVariationId = this.buildQuantityLookup(inventoryCounts);
+    const variations: VariationDTO[] = [];
+  
+    for (const variation of squareVariations) {
+      const data = variation.itemVariationData ?? {};
+      const price = data.priceMoney ?? {};
+      const amount = Number(price.amount ?? 0);
+  
+      const simplifiedVariation: VariationDTO = {
+        id: variation.id,
+        name: data.name ?? "",
+        price: {
+          amount: Number.isFinite(amount) ? amount : 0,
+          currency: price.currency ?? "USD",
+        },
+        quantity: (quantityByVariationId[variation.id] ?? 0).toString(),
+      };
+  
+      variations.push(simplifiedVariation);
     }
+  
     return variations;
-}
+  }  
 
- mapInventoryCountsToDTO(variationId: string, inventoryCounts: SquareInventoryCountsResponse): string {
-    
-    for (const count of inventoryCounts) {
-        if (count.catalogObjectId === variationId) {
-            return count.quantity;
-        }
+  private buildQuantityLookup(counts: Square.InventoryCount[]): Record<string, number> {
+    const lookup: Record<string, number> = {};
+  
+    if (!counts) return lookup;
+  
+    for (const count of counts) {
+      const variationId = count.catalogObjectId ?? "";
+      const parsedQuantity = Number(count.quantity ?? 0);
+      lookup[variationId] = Number.isFinite(parsedQuantity) ? parsedQuantity : 0;
     }
-    return '0';
-}
+    return lookup;
+  }
+  
+  private isCatalogItem(
+    obj: Square.CatalogObject
+  ): obj is Square.CatalogObject.Item {
+    return obj.type === "ITEM";
+  }
 
+  private isItemVariation(
+    obj: Square.CatalogObject
+  ): obj is Square.CatalogObject.ItemVariation {
+    return obj.type === "ITEM_VARIATION";
+  }
 }
