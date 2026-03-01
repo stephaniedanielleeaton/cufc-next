@@ -113,13 +113,15 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
           <div className="text-base text-gray-900">{formatCheckInDate(checkInDate)}</div>
         </div>
 
-        {/* Notes (only if present) */}
-        {notes && (
-          <div className="flex-1 min-w-0">
-            <div className="text-sm text-gray-600">Notes</div>
-            <div className="text-base text-gray-900 truncate">{notes}</div>
-          </div>
-        )}
+        {/* Notes */}
+        <div className="flex-1 min-w-0">
+          {notes && (
+            <>
+              <div className="text-sm text-gray-600">Notes</div>
+              <div className="text-base text-gray-900 truncate">{notes}</div>
+            </>
+          )}
+        </div>
 
         {/* Icons */}
         <div className="flex items-center justify-end min-w-[40px] ml-2 space-x-2">
