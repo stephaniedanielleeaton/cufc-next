@@ -1,7 +1,7 @@
 import { auth0 } from "@/lib/auth/auth0";
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongoose";
-import { MemberProfile } from "@/lib/models/MemberProfile";
+import { findOrCreateMemberProfile } from "@/lib/services/memberProfileService";
 
 export async function GET() {
   await dbConnect();
@@ -11,12 +11,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const auth0Id = session.user.sub;
-  const member = await MemberProfile.findOne({ auth0Id });
-
-  if (!member) {
-    return NextResponse.json({ error: "Profile not found" }, { status: 404 });
-  }
+  const member = await findOrCreateMemberProfile(session.user);
 
   return NextResponse.json({
     profileId: member._id,
@@ -25,5 +20,6 @@ export async function GET() {
     personalInfo: member.personalInfo,
     email: member.personalInfo?.email,
     profileComplete: member.profileComplete ?? false,
+    memberStatus: member.memberStatus,
   });
 }
