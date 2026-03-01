@@ -4,8 +4,8 @@ import React from "react";
 import type { MemberProfileDTO } from "@/types/MemberProfile";
 import { TextInput } from "@/components/common/TextInput";
 import { Dropdown } from "@/components/common/Dropdown";
+import SaveButton, { SaveStatus } from "@/components/common/SaveButton";
 
-type SaveStatus = "idle" | "saving" | "saved" | "error";
 type Props = { member: MemberProfileDTO; onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void; saveStatus?: SaveStatus };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -175,28 +175,8 @@ export default function MemberDetailsInline({ member, onSubmit, saveStatus = "id
           </Section>
         </div>
 
-        <div className="px-4 sm:px-6 pb-5 flex items-center justify-end gap-3">
-          {saveStatus === "saved" && (
-            <span className="text-sm text-green-600 font-medium">Changes saved</span>
-          )}
-          {saveStatus === "error" && (
-            <span className="text-sm text-red-500 font-medium">Save failed — please try again</span>
-          )}
-          <button
-            type="submit"
-            disabled={saveStatus === "saving"}
-            className={`px-5 py-2 text-sm font-semibold rounded-lg transition-colors ${
-              saveStatus === "saving"
-                ? "bg-blue-400 text-white cursor-not-allowed"
-                : saveStatus === "saved"
-                ? "bg-green-600 text-white hover:bg-green-700"
-                : saveStatus === "error"
-                ? "bg-red-500 text-white hover:bg-red-600"
-                : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
-          >
-            {saveStatus === "saving" ? "Saving…" : saveStatus === "saved" ? "Saved!" : saveStatus === "error" ? "Failed" : "Save Changes"}
-          </button>
+        <div className="px-4 sm:px-6 pb-5 flex justify-end">
+          <SaveButton saveStatus={saveStatus} />
         </div>
       </div>
     </form>

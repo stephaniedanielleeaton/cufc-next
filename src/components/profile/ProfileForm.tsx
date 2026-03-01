@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useMemberProfile } from "@/context/ProfileContext";
 import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
 import { TextInput } from "@/components/common/TextInput";
-import { SquareButton } from "@/components/common/SquareButton";
+import SaveButton, { SaveStatus } from "@/components/common/SaveButton";
 
 export default function ProfileForm({ member }: { member: MemberProfileFormInput }) {
-  const { refreshProfile } = useMemberProfile();
+  const { setProfile } = useMemberProfile();
   const [formData, setFormData] = useState<MemberProfileFormInput>(() => ({
     displayFirstName: member.displayFirstName || "",
     displayLastName: member.displayLastName || "",
@@ -30,6 +30,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
     ...member,
   }));
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
@@ -106,11 +107,13 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
     });
 
     if (res.ok) {
-      await refreshProfile();
-      alert("Profile updated!");
+      const { data } = await res.json();
+      setProfile(data);
+      setSaveStatus("saved");
     } else {
-      alert("Error updating profile.");
+      setSaveStatus("error");
     }
+    setTimeout(() => setSaveStatus("idle"), 3000);
   };
 
   return (
@@ -216,12 +219,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       </div>
 
       <div className="pt-6 flex justify-center">
-        <SquareButton 
-          type="submit" 
-          variant="white"
-        >
-          SAVE
-        </SquareButton>
+        <SaveButton saveStatus={saveStatus} label="Save" />
       </div>
     </form>
   );
