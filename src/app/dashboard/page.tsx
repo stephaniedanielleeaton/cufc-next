@@ -20,7 +20,12 @@ export default function MemberDashboard() {
   if (error) return <div className="p-6 text-red-600">{error}</div>;
   if (!profile) return <div className="p-6 text-red-600">No profile found.</div>;
 
-  const dropInDisabled = !profile.profileComplete || profile.memberStatus !== MemberStatus.New;
+  const dropInDisabled = !profile.profileComplete || profile.memberStatus === MemberStatus.New;
+  const dropInDisabledReason = !profile.profileComplete
+    ? "Complete your profile to unlock"
+    : profile.memberStatus === MemberStatus.New
+    ? "Complete an intro course or contact a coach to unlock"
+    : undefined;
   
   const handleShowIntroClasses = () => {
     setShowIntroClasses(true);
@@ -104,6 +109,7 @@ export default function MemberDashboard() {
                   label="Pay for Drop In"
                   icon="dollar-sign"
                   disabled={dropInDisabled}
+                  disabledReason={dropInDisabledReason}
                 />
                 <DashboardToolCard label="My Payments" icon="credit-card" />
                 <DashboardToolCard label="My Attendance" icon="calendar-check" />
