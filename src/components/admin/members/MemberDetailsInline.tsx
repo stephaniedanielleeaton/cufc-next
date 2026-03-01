@@ -5,7 +5,8 @@ import type { MemberProfileDTO } from "@/types/MemberProfile";
 import { TextInput } from "@/components/common/TextInput";
 import { Dropdown } from "@/components/common/Dropdown";
 
-type Props = { member: MemberProfileDTO };
+type SaveStatus = "idle" | "saving" | "saved" | "error";
+type Props = { member: MemberProfileDTO; onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void; saveStatus?: SaveStatus };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -39,7 +40,7 @@ function Toggle({
   );
 }
 
-export default function MemberDetailsInline({ member }: Props) {
+export default function MemberDetailsInline({ member, onSubmit, saveStatus = "idle" }: Props) {
   const address = member.personalInfo?.address;
   const dobForInput =
     member.personalInfo?.dateOfBirth
@@ -47,7 +48,7 @@ export default function MemberDetailsInline({ member }: Props) {
       : "";
 
   return (
-    <div className="pb-5 w-full"> {/* removed outer horizontal padding */}
+    <form onSubmit={onSubmit} className="pb-5 w-full"> {/* removed outer horizontal padding */}
       <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden w-full">
 
         <div className="p-4 sm:p-6 space-y-8">
@@ -116,44 +117,44 @@ export default function MemberDetailsInline({ member }: Props) {
           <hr className="border-gray-100" />
 
           <Section title="Status & Flags">
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {/* Left: all toggles together */}
-    <div className="space-y-3">
-      <Toggle
-        label="Profile complete"
-        name="profileComplete"
-        defaultChecked={member.profileComplete ?? false}
-      />
-      <Toggle
-        label="Waiver on file"
-        name="isWaiverOnFile"
-        defaultChecked={member.isWaiverOnFile ?? false}
-      />
-      <Toggle
-        label="Payment waived"
-        name="isPaymentWaived"
-        defaultChecked={member.isPaymentWaived ?? false}
-      />
-    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left: all toggles together */}
+              <div className="space-y-3">
+                <Toggle
+                  label="Profile complete"
+                  name="profileComplete"
+                  defaultChecked={member.profileComplete ?? false}
+                />
+                <Toggle
+                  label="Waiver on file"
+                  name="isWaiverOnFile"
+                  defaultChecked={member.isWaiverOnFile ?? false}
+                />
+                <Toggle
+                  label="Payment waived"
+                  name="isPaymentWaived"
+                  defaultChecked={member.isPaymentWaived ?? false}
+                />
+              </div>
 
-    <div className="space-y-4">
-      <Dropdown
-        label="Member Status"
-        name="memberStatus"
-        defaultValue={member.memberStatus ?? "New"}
-        options={[
-          { value: "New", label: "New" },
-          { value: "Full", label: "Full" },
-        ]}
-      />
-      <TextInput
-        label="Square Customer ID"
-        name="squareCustomerId"
-        defaultValue={member.squareCustomerId ?? ""}
-      />
-    </div>
-  </div>
-</Section>
+              <div className="space-y-4">
+                <Dropdown
+                  label="Member Status"
+                  name="memberStatus"
+                  defaultValue={member.memberStatus ?? "New"}
+                  options={[
+                    { value: "New", label: "New" },
+                    { value: "Full", label: "Full" },
+                  ]}
+                />
+                <TextInput
+                  label="Square Customer ID"
+                  name="squareCustomerId"
+                  defaultValue={member.squareCustomerId ?? ""}
+                />
+              </div>
+            </div>
+          </Section>
 
           <hr className="border-gray-100" />
 
@@ -173,7 +174,31 @@ export default function MemberDetailsInline({ member }: Props) {
             </div>
           </Section>
         </div>
+
+        <div className="px-4 sm:px-6 pb-5 flex items-center justify-end gap-3">
+          {saveStatus === "saved" && (
+            <span className="text-sm text-green-600 font-medium">Changes saved</span>
+          )}
+          {saveStatus === "error" && (
+            <span className="text-sm text-red-500 font-medium">Save failed — please try again</span>
+          )}
+          <button
+            type="submit"
+            disabled={saveStatus === "saving"}
+            className={`px-5 py-2 text-sm font-semibold rounded-lg transition-colors ${
+              saveStatus === "saving"
+                ? "bg-blue-400 text-white cursor-not-allowed"
+                : saveStatus === "saved"
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : saveStatus === "error"
+                ? "bg-red-500 text-white hover:bg-red-600"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
+            {saveStatus === "saving" ? "Saving…" : saveStatus === "saved" ? "Saved!" : saveStatus === "error" ? "Failed" : "Save Changes"}
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 }

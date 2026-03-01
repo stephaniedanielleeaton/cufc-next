@@ -10,8 +10,9 @@ import type { MemberProfileDTO } from "@/types/MemberProfile";
 export default function MembersPage() {
   const [search, setSearch] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
-  const { data, error, isLoading } = useSWR("/api/members", (url) => fetch(url).then((res) => res.json()));
+  const { data, error, isLoading, mutate } = useSWR("/api/members", (url) => fetch(url).then((res) => res.json()));
   const { data: attendanceData, error: attendanceError, isLoading: attendanceLoading } =
     useSWR("/api/attendance/recent", (url) => fetch(url).then((res) => res.json()));
 
@@ -36,6 +37,57 @@ export default function MembersPage() {
 
   const handleToggle = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
+  };
+
+  const handleSave = (id: string) => async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+
+    const body = {
+      displayFirstName: fd.get("displayFirstName"),
+      displayLastName: fd.get("displayLastName"),
+      personalInfo: {
+        legalFirstName: fd.get("legalFirstName"),
+        legalLastName: fd.get("legalLastName"),
+        email: fd.get("email"),
+        phone: fd.get("phone"),
+        dateOfBirth: fd.get("dateOfBirth") || null,
+        address: {
+          street: fd.get("street"),
+          city: fd.get("city"),
+          state: fd.get("state"),
+          zip: fd.get("zip"),
+          country: fd.get("country"),
+        },
+      },
+      guardian: {
+        firstName: fd.get("guardian.firstName"),
+        lastName: fd.get("guardian.lastName"),
+      },
+      profileComplete: fd.get("profileComplete") === "on",
+      isWaiverOnFile: fd.get("isWaiverOnFile") === "on",
+      isPaymentWaived: fd.get("isPaymentWaived") === "on",
+      isIntroCourseCompleted: fd.get("isIntroCourseCompleted") === "on",
+      memberStatus: fd.get("memberStatus"),
+      squareCustomerId: fd.get("squareCustomerId"),
+      notes: fd.get("notes"),
+    };
+
+    setSaveStatus("saving");
+    try {
+      const res = await fetch(`/api/admin/members/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error();
+      await mutate();
+      setSaveStatus("saved");
+    } catch {
+      setSaveStatus("error");
+    } finally {
+      setTimeout(() => setSaveStatus("idle"), 3000);
+    }
   };
 
   if (isLoading || attendanceLoading) return <div className="text-center py-8 text-gray-400">Loading members...</div>;
@@ -63,7 +115,7 @@ export default function MembersPage() {
 
               {expanded && (
                 <div className="mt-2">
-                  <MemberDetailsInline member={member} />
+                  <MemberDetailsInline member={member} onSubmit={handleSave(id)} saveStatus={saveStatus} />
                 </div>
               )}
             </div>
