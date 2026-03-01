@@ -13,7 +13,7 @@ export function LastCheckInCard() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("/api/member/last-checkin");
+        const res = await fetch("/api/members/last-checkin");
         const data = await res.json();
         if (res.ok && data.lastCheckIn) {
           setLastCheckIn(data.lastCheckIn);

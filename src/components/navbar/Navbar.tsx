@@ -6,7 +6,7 @@ import { AUTH_LOGIN_PATH, AUTH_LOGOUT_PATH } from "@/lib/auth/paths";
 import { MobileNavbar } from "./MobileNavbar";
 import { DesktopNavbar } from "./DesktopNavbar";
 import { useUserRoles } from "../../hooks/useUserRoles";
-import { useMemberProfile } from "@/app/context/ProfileContext";
+import { useMemberProfile } from "@/context/ProfileContext";
 
 type Auth0User = {
   picture?: string;

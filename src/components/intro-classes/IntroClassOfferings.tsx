@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useIntroClassOfferings } from '@/hooks/useIntroClassOfferings';
-import { useMemberProfile } from '@/app/context/ProfileContext';
+import { useMemberProfile } from '@/context/ProfileContext';
 import { useUser } from '@auth0/nextjs-auth0';
 import { ClassVariationItem } from './ClassVariationItem';
 import { EnrollButton } from './EnrollButton';

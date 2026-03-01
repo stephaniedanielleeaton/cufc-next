@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@auth0/nextjs-auth0";
-import { useMemberProfile } from "@/app/context/ProfileContext";
+import { useMemberProfile } from "@/context/ProfileContext";
 import ProfileForm from "@/components/profile/ProfileForm";
 import  { ProfileHeader }  from "@/components/profile/ProfileHeader";
 

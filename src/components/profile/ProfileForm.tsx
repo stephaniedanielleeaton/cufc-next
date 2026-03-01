@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMemberProfile } from "@/app/context/ProfileContext";
+import { useMemberProfile } from "@/context/ProfileContext";
 import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
 import { TextInput } from "@/components/common/TextInput";
 import { SquareButton } from "@/components/common/SquareButton";
@@ -99,7 +99,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       };
     }
 
-    const res = await fetch("/api/member/me/update", {
+    const res = await fetch("/api/members/me/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataToSend),

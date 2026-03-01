@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemberProfile } from "@/app/context/ProfileContext";
+import { useMemberProfile } from "@/context/ProfileContext";
 import { DashboardHeaderCard } from "../../components/dashboard/DashboardHeaderCard";
 import { DashboardSubscriptionCard } from "../../components/dashboard/DashboardSubscriptionCard";
 import { DashboardToolCard } from "../../components/dashboard/DashboardToolCard";

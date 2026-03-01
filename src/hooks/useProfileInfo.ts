@@ -8,7 +8,7 @@ export function useProfileInfo() {
   useEffect(() => {
     const fetchProfileInfo = async () => {
       try {
-        const res = await fetch("/api/member/me");
+        const res = await fetch("/api/members/me");
         if (res.ok) {
           const data = await res.json();
           let displayName = null;

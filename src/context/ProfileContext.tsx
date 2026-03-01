@@ -43,7 +43,7 @@ import React, {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("/api/member/me");
+        const res = await fetch("/api/members/me");
         if (!res.ok) throw new Error("Failed to fetch profile");
         const data = await res.json();
         setProfile(data);

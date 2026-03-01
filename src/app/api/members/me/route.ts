@@ -1,7 +1,7 @@
 import { auth0 } from "@/lib/auth/auth0";
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongoose";
-import { findOrCreateMemberProfile } from "@/lib/services/memberProfileService";
+import { findOrCreateMemberProfile } from "@/lib/services/member/memberProfileService";
 
 export async function GET() {
   await dbConnect();

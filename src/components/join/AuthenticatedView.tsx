@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemberProfile } from "@/app/context/ProfileContext";
+import { useMemberProfile } from "@/context/ProfileContext";
 import Link from "next/link";
 
 interface AuthenticatedViewProps {
