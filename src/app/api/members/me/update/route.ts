@@ -1,42 +1,17 @@
 import { auth0 } from "@/lib/auth/auth0";
 import { NextResponse } from "next/server";
-import { dbConnect } from "@/lib/mongoose";
-import { MemberProfile } from "@/lib/models/MemberProfile";
+import { updateMemberProfileByAuth0Id } from "@/lib/services/member/memberProfileService";
+import { MemberUpdateData } from "@/types/MemberProfile";
 
 export async function POST(req: Request) {
-  await dbConnect();
   const session = await auth0.getSession();
 
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const auth0Id = session.user.sub;
-  const body = await req.json();
-
-  const updateObj = {
-    $set: {
-      displayFirstName: body.displayFirstName,
-      displayLastName: body.displayLastName,
-      "personalInfo.legalFirstName": body.personalInfo?.legalFirstName,
-      "personalInfo.legalLastName": body.personalInfo?.legalLastName,
-      "personalInfo.email": body.personalInfo?.email,
-      "personalInfo.phone": body.personalInfo?.phone,
-      "personalInfo.dateOfBirth": body.personalInfo?.dateOfBirth,
-      "personalInfo.address.street": body.personalInfo?.address?.street,
-      "personalInfo.address.city": body.personalInfo?.address?.city,
-      "personalInfo.address.state": body.personalInfo?.address?.state,
-      "personalInfo.address.zip": body.personalInfo?.address?.zip,
-      "personalInfo.address.country": body.personalInfo?.address?.country,
-      profileComplete: body.profileComplete
-    }
-  };
-
-  const updated = await MemberProfile.findOneAndUpdate(
-    { auth0Id },
-    updateObj,
-    { new: true }
-  );
+  const body: MemberUpdateData = await req.json();
+  const updated = await updateMemberProfileByAuth0Id(session.user.sub, body);
 
   return NextResponse.json({ success: true, data: updated });
 }

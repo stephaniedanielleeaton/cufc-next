@@ -32,13 +32,41 @@ const GuardianSchema = new Schema({
 
 import { MemberStatus } from "@/types/MemberStatus";
 
+export interface IAddress {
+  street?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+}
+
+export interface IPersonalInfo {
+  legalFirstName?: string;
+  legalLastName?: string;
+  email?: string;
+  phone?: string;
+  dateOfBirth?: Date;
+  address?: IAddress;
+}
+
+export interface IGuardian {
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface IFamilyMember {
+  name?: string;
+  relationship?: string;
+  dateOfBirth?: Date;
+}
+
 export interface IMemberProfile extends Document {
   auth0Id: string;
   displayFirstName?: string;
   displayLastName?: string;
-  personalInfo?: typeof PersonalInfoSchema;
-  guardian?: typeof GuardianSchema;
-  familyMembers?: typeof FamilyMemberSchema[];
+  personalInfo?: IPersonalInfo;
+  guardian?: IGuardian;
+  familyMembers?: IFamilyMember[];
   isWaiverOnFile?: boolean;
   isPaymentWaived?: boolean;
   notes?: string;

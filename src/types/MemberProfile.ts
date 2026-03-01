@@ -50,3 +50,16 @@ export type MemberProfileDTO = {
   isSubscriptionActive?: boolean;
   role?: string;
 };
+
+export type MemberUpdateData = {
+  displayFirstName?: string;
+  displayLastName?: string;
+  personalInfo?: PersonalInfo;
+  guardian?: Guardian;
+  profileComplete?: boolean;
+  isWaiverOnFile?: boolean;
+  isPaymentWaived?: boolean;
+  memberStatus?: string;
+  squareCustomerId?: string;
+  notes?: string;
+};

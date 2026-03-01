@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongoose";
 import { Attendance } from "@/lib/models/Attendance";
-import { MemberProfile } from "@/lib/models/MemberProfile";
-
 import { requireRole } from "@/lib/auth/requireRole";
+import { getAllMemberIds } from "@/lib/services/member/memberProfileService";
 
 // Returns a list of all member IDs with their most recent attendance check-in timestamp.
 
@@ -15,8 +14,7 @@ export async function GET() {
 
   try {
     await dbConnect();
-    const members = await MemberProfile.find({}, { _id: 1 }).lean();
-    const memberIds = members.map((m) => (typeof m._id === 'string' ? m._id : m._id?.toString())).filter(Boolean) as string[];
+    const memberIds = await getAllMemberIds();
 
     const attendanceByMember = await Attendance.aggregate([
       { $match: { userId: { $in: memberIds } } },
