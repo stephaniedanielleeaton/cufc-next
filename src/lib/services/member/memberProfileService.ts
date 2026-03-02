@@ -10,6 +10,7 @@ function toISODateString(date: Date): string {
 export function mapMemberDocToDTO(doc: HydratedDocument<IMemberProfile>): MemberProfileDTO {
   return {
     _id: doc.id as string,
+    auth0Id: doc.auth0Id,
     displayFirstName: doc.displayFirstName,
     displayLastName: doc.displayLastName,
     personalInfo: doc.personalInfo
@@ -85,6 +86,21 @@ export async function getAllMemberIds(): Promise<string[]> {
   await dbConnect();
   const profiles = await MemberProfile.find({}, { _id: 1 }).lean();
   return profiles.map((p) => String(p._id));
+}
+
+export async function getProfileForUser(auth0Id: string): Promise<MemberProfileDTO | null> {
+  await dbConnect();
+  const doc = await MemberProfile.findOne({ auth0Id });
+  return doc ? mapMemberDocToDTO(doc) : null;
+}
+
+export async function createProfileForUser(
+  auth0Id: string,
+  initialData?: { displayFirstName?: string; displayLastName?: string; personalInfo?: { email?: string }; guardian?: { firstName?: string; lastName?: string } }
+): Promise<MemberProfileDTO> {
+  await dbConnect();
+  const doc = await MemberProfile.create({ auth0Id, ...(initialData ?? {}) });
+  return mapMemberDocToDTO(doc);
 }
 
 export async function updateMemberProfileById(

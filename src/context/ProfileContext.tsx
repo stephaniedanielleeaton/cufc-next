@@ -7,9 +7,6 @@ import type { MemberProfileDTO } from "@/types/MemberProfile";
 
 type MemberProfileContextType = {
   profile: MemberProfileFormInput | null;
-  profiles: MemberProfileDTO[];
-  activeProfileId: string | null;
-  setActiveProfileId: (id: string) => void;
   loading: boolean;
   error: string | null;
   refreshProfile: () => Promise<void>;
@@ -31,16 +28,12 @@ function toFormInput(p: MemberProfileDTO): MemberProfileFormInput {
 export function MemberProfileProvider({ children }: { children: ReactNode }) {
   const { user } = useUser();
   const [profile, setProfile] = useState<MemberProfileFormInput | null>(null);
-  const [profiles, setProfiles] = useState<MemberProfileDTO[]>([]);
-  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!user) {
       setProfile(null);
-      setProfiles([]);
-      setActiveProfileId(null);
       setLoading(false);
       setError(null);
       return;
@@ -51,18 +44,11 @@ export function MemberProfileProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/members/me");
       if (!res.ok) throw new Error("Failed to fetch profile");
       const data = await res.json();
-      const fetchedProfiles: MemberProfileDTO[] = data.profiles ?? [];
-      setProfiles(fetchedProfiles);
-      setActiveProfileId((prev) => {
-        if (prev && fetchedProfiles.some((p) => String(p._id) === prev)) return prev;
-        return fetchedProfiles[0] ? String(fetchedProfiles[0]._id) : null;
-      });
-      const primary = fetchedProfiles[0] ?? null;
-      setProfile(primary ? toFormInput(primary) : null);
+      const fetched: MemberProfileDTO | null = data.profile ?? null;
+      setProfile(fetched ? toFormInput(fetched) : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
       setProfile(null);
-      setProfiles([]);
     } finally {
       setLoading(false);
     }
@@ -73,18 +59,8 @@ export function MemberProfileProvider({ children }: { children: ReactNode }) {
   }, [fetchProfile]);
 
   useEffect(() => {
-    if (!activeProfileId || profiles.length === 0) return;
-    const active = profiles.find((p) => String(p._id) === activeProfileId);
-    if (active) setProfile(toFormInput(active));
-  }, [activeProfileId, profiles]);
-
-  useEffect(() => {
     if (!profile?.profileId || profile.squareCustomerId || !profile.personalInfo?.email) return;
-    fetch("/api/members/me/sync-square", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ memberProfileId: profile.profileId }),
-    })
+    fetch("/api/members/me/sync-square", { method: "POST" })
       .then((res) => res.json())
       .then((data) => { if (data.status === "linked") fetchProfile(); })
       .catch(() => {});
@@ -92,16 +68,7 @@ export function MemberProfileProvider({ children }: { children: ReactNode }) {
 
   return (
     <MemberProfileContext.Provider
-      value={{
-        profile,
-        profiles,
-        activeProfileId,
-        setActiveProfileId,
-        loading,
-        error,
-        refreshProfile: fetchProfile,
-        setProfile,
-      }}
+      value={{ profile, loading, error, refreshProfile: fetchProfile, setProfile }}
     >
       {children}
     </MemberProfileContext.Provider>

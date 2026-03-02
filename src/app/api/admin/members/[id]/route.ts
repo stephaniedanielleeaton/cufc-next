@@ -4,7 +4,6 @@ import { updateMemberProfileById } from "@/lib/services/member/memberProfileServ
 import { MemberUpdateData } from "@/types/MemberProfile";
 import { dbConnect } from "@/lib/mongoose";
 import { MemberProfile } from "@/lib/models/MemberProfile";
-import { UserProfileLink } from "@/lib/models/UserProfileLink";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const authResult = await requireRole("club-admin");
@@ -37,8 +36,6 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   if (!deleted) {
     return NextResponse.json({ error: "Member not found" }, { status: 404 });
   }
-
-  await UserProfileLink.deleteMany({ profileId: deleted._id });
 
   return NextResponse.json({ success: true });
 }

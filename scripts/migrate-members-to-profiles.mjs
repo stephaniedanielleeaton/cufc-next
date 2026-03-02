@@ -77,7 +77,6 @@ function mapMemberToProfile(member, auth0Id) {
     squareCustomerId: member.square_customer_id || undefined,
     memberStatus: "New",
     profileComplete: false,
-    checkedIn: false,
     isPaymentWaived: false,
   };
 }
