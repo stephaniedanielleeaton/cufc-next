@@ -24,7 +24,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "square": "^43.0.1",
-    "swr": "^2.2.0"
+    "swr": "^2.2.0",
+    "typescript": "^5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -42,7 +43,6 @@
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "node-mocks-http": "^1.17.2",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "tailwindcss": "^4"
   }
 }
