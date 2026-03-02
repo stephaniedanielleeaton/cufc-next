@@ -11,9 +11,12 @@ import { useState, useEffect } from "react";
 import { IntroClassOfferings } from "@/components/intro-classes/IntroClassOfferings";
 import ProfileForm from "@/components/profile/ProfileForm";
 import { CreateProfileModal } from "@/components/dashboard/CreateProfileModal";
+import { DashboardIntroEnrollmentCard } from "@/components/dashboard/DashboardIntroEnrollmentCard";
+import { useIntroEnrollment } from "@/hooks/useIntroEnrollment";
 
 export default function MemberDashboard() {
   const { profile, loading, error, refreshProfile } = useMemberProfile();
+  const { enrollment, loading: enrollmentLoading } = useIntroEnrollment(profile?.profileId);
 
   useEffect(() => { refreshProfile(); }, [refreshProfile]);
   const [showIntroClasses, setShowIntroClasses] = useState(false);
@@ -116,6 +119,10 @@ export default function MemberDashboard() {
               </h2>
               {profile.memberStatus === MemberStatus.Full ? (
                 <DashboardSubscriptionCard memberProfileId={profile.profileId ?? ""} />
+              ) : enrollmentLoading ? (
+                <div className="h-16 bg-white rounded-lg shadow-md animate-pulse" />
+              ) : enrollment ? (
+                <DashboardIntroEnrollmentCard enrollment={enrollment} />
               ) : (
                 <DashboardIntroCourseCard onEnroll={handleShowIntroClasses} />
               )}

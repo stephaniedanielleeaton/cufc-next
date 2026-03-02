@@ -110,19 +110,42 @@ export class SquareService {
   }
 
   /**
+   * Search all orders at the location for a given memberProfileId stored in line item metadata.
+   * This works regardless of order state or whether the order has a Square customer ID attached.
+   */
+  async getOrdersByMemberProfileId(memberProfileId: string): Promise<Square.Order[]> {
+    try {
+      const response = await this.client.orders.search({
+        locationIds: [this.RETAIL_LOCATION_ID],
+        query: {
+          sort: { sortField: "CREATED_AT", sortOrder: "DESC" },
+        },
+      });
+      const orders = response.orders ?? [];
+      return orders.filter((o) =>
+        o.lineItems?.some((li) => li.metadata?.["memberProfileId"] === memberProfileId)
+      );
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
    * Get Checkout URL for a given catalog object variant ID and member profile ID
    */
-  async getSingleVariantCheckout(catalogObjectId: string, memberProfileId: string): Promise<string> {
+  async getSingleVariantCheckout(catalogObjectId: string, memberProfileId: string, customerId?: string): Promise<string> {
     try {
       const response = await this.client.checkout.paymentLinks.create({
         order: {
           locationId: this.RETAIL_LOCATION_ID,
+          ...(customerId ? { customerId } : {}),
           lineItems: [
             {
               catalogObjectId,
               quantity: "1",
               metadata: {
-                "memberProfileId":memberProfileId
+                "memberProfileId": memberProfileId
               }
             }
           ]
