@@ -6,9 +6,10 @@ interface MemberCardProps {
   lastCheckIn?: Date | string | null;
   onToggle?: () => void;
   isExpanded?: boolean;
+  squareStatusLoading?: boolean;
 }
 
-const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, isExpanded }) => {
+const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, isExpanded, squareStatusLoading }) => {
   const name =
     [member.displayFirstName, member.displayLastName].filter(Boolean).join(" ") || (
       <span className="text-gray-400 italic">N/A</span>
@@ -33,7 +34,9 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
   }
   const notes = member.notes;
 
-  const subIcon = hasActiveAccess ? (
+  const subIcon = squareStatusLoading ? (
+    <span className="inline-block w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+  ) : hasActiveAccess ? (
     <i className="fas fa-check-circle text-green-500 text-xl" title="Active subscription" />
   ) : (
     <i
@@ -45,7 +48,9 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
 
   const mobileAlertIcons = (
     <div className="flex items-center gap-2">
-      {hasActiveAccess ? (
+      {squareStatusLoading ? (
+        <span className="inline-block w-4 h-4 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+      ) : hasActiveAccess ? (
         <i className="fas fa-check-circle text-green-500 text-lg" title="Active subscription" />
       ) : (
         <i

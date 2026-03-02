@@ -13,9 +13,13 @@ export default function MembersPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
-  const { data, error, isLoading, mutate } = useSWR("/api/members", (url) => fetch(url).then((res) => res.json()));
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+  const { data, error, isLoading, mutate } = useSWR("/api/members", fetcher);
   const { data: attendanceData, error: attendanceError, isLoading: attendanceLoading } =
-    useSWR("/api/attendance/recent", (url) => fetch(url).then((res) => res.json()));
+    useSWR("/api/attendance/recent", fetcher);
+  const { data: squareStatus, isLoading: squareStatusLoading } =
+    useSWR("/api/members/square-status", fetcher);
 
   const lastCheckInMap = useMemo(() => {
     if (!attendanceData) return {} as Record<string, string | null>;
@@ -28,10 +32,21 @@ export default function MembersPage() {
 
   const todayStr = new Date().toDateString();
 
-  const filtered: MemberProfileDTO[] = useMemo(() => {
+  const enrichedMembers: MemberProfileDTO[] = useMemo(() => {
     const members: MemberProfileDTO[] = data?.members || [];
+    if (!squareStatus) return members;
+    const activeSubs = new Set<string>(squareStatus.activeSubscribers ?? []);
+    const dropIns = new Set<string>(squareStatus.dropIns ?? []);
+    return members.map((m) => ({
+      ...m,
+      isSubscriptionActive: !!m.squareCustomerId && activeSubs.has(m.squareCustomerId),
+      hasPaidDropInToday: !!m.squareCustomerId && dropIns.has(m.squareCustomerId),
+    }));
+  }, [data, squareStatus]);
+
+  const filtered: MemberProfileDTO[] = useMemo(() => {
     const q = search.toLowerCase();
-    return members.filter((m) => {
+    return enrichedMembers.filter((m) => {
       const first = m.displayFirstName || "";
       const last = m.displayLastName || "";
       const matchesSearch = `${first} ${last}`.toLowerCase().includes(q);
@@ -40,7 +55,7 @@ export default function MembersPage() {
       const matchesCheckedIn = !checkedInOnly || isCheckedInToday;
       return matchesSearch && matchesCheckedIn;
     });
-  }, [data, search, checkedInOnly, lastCheckInMap, todayStr]);
+  }, [enrichedMembers, search, checkedInOnly, lastCheckInMap, todayStr]);
 
   const handleToggle = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -142,6 +157,7 @@ export default function MembersPage() {
                 lastCheckIn={lastCheckInMap[id] ?? null}
                 onToggle={() => handleToggle(id)}
                 isExpanded={expanded}
+                squareStatusLoading={squareStatusLoading}
               />
 
               {expanded && (
