@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth0 } from "@/lib/auth/auth0";
 import { getProfileForUser, updateMemberProfileById } from "@/lib/services/member/memberProfileService";
 import { SquareService } from "@/lib/services/square/squareService";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(_req: NextRequest) {
+export async function POST() {
   const session = await auth0.getSession();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

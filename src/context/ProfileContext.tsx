@@ -64,7 +64,7 @@ export function MemberProfileProvider({ children }: { children: ReactNode }) {
       .then((res) => res.json())
       .then((data) => { if (data.status === "linked") fetchProfile(); })
       .catch(() => {});
-  }, [profile?.profileId, profile?.squareCustomerId, fetchProfile]);
+  }, [profile?.profileId, profile?.squareCustomerId, profile?.personalInfo?.email, fetchProfile]);
 
   return (
     <MemberProfileContext.Provider
