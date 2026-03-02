@@ -23,9 +23,13 @@ export async function getMemberSubscriptions(squareCustomerId: string): Promise<
   const squareService = new SquareService();
   const subscriptions = await squareService.getCustomerSubscriptions(squareCustomerId);
 
+  const activeSubscriptions = subscriptions.filter(
+    (sub) => sub.status === "ACTIVE" || sub.status === "PAUSED"
+  );
+
   const results: MemberSubscriptionDTO[] = [];
 
-  for (const sub of subscriptions) {
+  for (const sub of activeSubscriptions) {
     let planName = "Membership";
     let priceFormatted = "—";
 

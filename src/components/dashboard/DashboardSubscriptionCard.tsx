@@ -2,24 +2,20 @@
 
 import useSWR from "swr";
 import { ShieldCheck } from "lucide-react";
-import type { MemberSubscriptionDTO, SubscriptionStatus } from "@/types/Subscription";
+import type { MemberSubscriptionDTO } from "@/types/Subscription";
+
+type ActiveSubscriptionStatus = "ACTIVE" | "PAUSED";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-const statusStyles: Record<SubscriptionStatus, string> = {
-  ACTIVE:      "bg-green-100 text-green-700",
-  PAUSED:      "bg-yellow-100 text-yellow-700",
-  CANCELED:    "bg-red-100 text-red-700",
-  PENDING:     "bg-blue-100 text-blue-700",
-  DEACTIVATED: "bg-gray-100 text-gray-600",
+const statusStyles: Record<ActiveSubscriptionStatus, string> = {
+  ACTIVE: "bg-green-100 text-green-700",
+  PAUSED: "bg-yellow-100 text-yellow-700",
 };
 
-const statusLabel: Record<SubscriptionStatus, string> = {
-  ACTIVE:      "Active",
-  PAUSED:      "Paused",
-  CANCELED:    "Canceled",
-  PENDING:     "Pending",
-  DEACTIVATED: "Deactivated",
+const statusLabel: Record<ActiveSubscriptionStatus, string> = {
+  ACTIVE: "Active",
+  PAUSED: "Paused",
 };
 
 export function DashboardSubscriptionCard() {
@@ -62,9 +58,9 @@ export function DashboardSubscriptionCard() {
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
               <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusStyles[sub.status]}`}
+                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusStyles[sub.status as ActiveSubscriptionStatus]}`}
               >
-                {statusLabel[sub.status]}
+                {statusLabel[sub.status as ActiveSubscriptionStatus]}
               </span>
               <span className="text-sm font-medium">{sub.priceFormatted}</span>
             </div>
