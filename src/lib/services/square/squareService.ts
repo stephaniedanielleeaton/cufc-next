@@ -91,6 +91,25 @@ export class SquareService {
   }
 
   /**
+   * Search for a Square customer by exact email address. Returns the first match or null.
+   */
+  async searchCustomersByEmail(email: string): Promise<Square.Customer[]> {
+    try {
+      const response = await this.client.customers.search({
+        query: {
+          filter: {
+            emailAddress: { exact: email },
+          },
+        },
+      });
+      return response.customers ?? [];
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
    * Get Checkout URL for a given catalog object variant ID and member profile ID
    */
   async getSingleVariantCheckout(catalogObjectId: string, memberProfileId: string): Promise<string> {
