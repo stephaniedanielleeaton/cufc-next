@@ -61,11 +61,19 @@ function formatMoney(amount?: bigint | number, currency?: string) {
   }).format(Number(amount) / 100);
 }
 
+type AttendanceRecord = {
+  id: string;
+  timestamp: string;
+};
+
 export default function MemberDetailsInline({ member, onSubmit, onDelete, saveStatus = "idle" }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showTransactions, setShowTransactions] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[] | null>(null);
   const [txLoading, setTxLoading] = useState(false);
+  const [showAttendance, setShowAttendance] = useState(false);
+  const [attendance, setAttendance] = useState<AttendanceRecord[] | null>(null);
+  const [attendanceLoading, setAttendanceLoading] = useState(false);
 
   const handleLoadTransactions = async () => {
     if (showTransactions) { setShowTransactions(false); return; }
@@ -80,6 +88,22 @@ export default function MemberDetailsInline({ member, onSubmit, onDelete, saveSt
       setTransactions([]);
     } finally {
       setTxLoading(false);
+    }
+  };
+
+  const handleLoadAttendance = async () => {
+    if (showAttendance) { setShowAttendance(false); return; }
+    setShowAttendance(true);
+    if (attendance !== null) return;
+    setAttendanceLoading(true);
+    try {
+      const res = await fetch(`/api/admin/members/${member._id}/attendance`);
+      const data = await res.json();
+      setAttendance(data.attendance ?? []);
+    } catch {
+      setAttendance([]);
+    } finally {
+      setAttendanceLoading(false);
     }
   };
   const address = member.personalInfo?.address;
@@ -240,6 +264,51 @@ export default function MemberDetailsInline({ member, onSubmit, onDelete, saveSt
                       </ul>
                     </div>
                   ))
+                )}
+              </div>
+            )}
+          </Section>
+
+          <hr className="border-gray-100" />
+
+          <Section title="Attendance History">
+            <button
+              type="button"
+              onClick={handleLoadAttendance}
+              className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              {showAttendance ? "Hide attendance" : "View last 100 check-ins"}
+            </button>
+            {showAttendance && (
+              <div className="mt-3 space-y-2">
+                {attendanceLoading ? (
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="inline-block w-4 h-4 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+                    Loading attendance…
+                  </div>
+                ) : attendance?.length === 0 ? (
+                  <p className="text-sm text-gray-500">No attendance records found.</p>
+                ) : (
+                  <div className="max-h-64 overflow-y-auto space-y-1">
+                    {attendance?.map((record) => (
+                      <div key={record.id} className="flex items-center justify-between py-2 px-3 rounded bg-gray-50 text-sm">
+                        <span className="text-gray-800">
+                          {new Date(record.timestamp).toLocaleDateString("en-US", { 
+                            year: "numeric", 
+                            month: "short", 
+                            day: "numeric",
+                            weekday: "short"
+                          })}
+                        </span>
+                        <span className="text-gray-500 text-xs">
+                          {new Date(record.timestamp).toLocaleTimeString("en-US", { 
+                            hour: "numeric", 
+                            minute: "2-digit"
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
