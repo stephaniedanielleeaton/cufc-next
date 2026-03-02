@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth/requireRole";
 import { getAllMemberProfiles } from "@/lib/services/member/memberProfileService";
+import { SquareService } from "@/lib/services/square/squareService";
 
 export async function GET() {
   const authResult = await requireRole("club-admin");
@@ -9,5 +10,18 @@ export async function GET() {
   }
 
   const members = await getAllMemberProfiles();
-  return NextResponse.json({ members });
+
+  const customerIds = members
+    .map((m) => m.squareCustomerId)
+    .filter((id): id is string => !!id);
+
+  const squareService = new SquareService();
+  const activeCustomerIds = await squareService.getActiveSubscriptionsForCustomers(customerIds);
+
+  const enriched = members.map((m) => ({
+    ...m,
+    isSubscriptionActive: !!m.squareCustomerId && activeCustomerIds.has(m.squareCustomerId),
+  }));
+
+  return NextResponse.json({ members: enriched });
 }

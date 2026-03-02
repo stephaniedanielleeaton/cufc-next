@@ -72,6 +72,33 @@ export class SquareService {
   }
 
   /**
+   * Return the set of customer IDs that have at least one ACTIVE subscription.
+   * Uses a single Square API call for the entire list.
+   */
+  async getActiveSubscriptionsForCustomers(customerIds: string[]): Promise<Set<string>> {
+    if (customerIds.length === 0) return new Set();
+    try {
+      const response = await this.client.subscriptions.search({
+        query: {
+          filter: {
+            customerIds,
+          },
+        },
+      });
+      const active = new Set<string>();
+      for (const sub of response.subscriptions ?? []) {
+        if (sub.status === "ACTIVE" && sub.customerId) {
+          active.add(sub.customerId);
+        }
+      }
+      return active;
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
    * Get all subscriptions for a Square customer
    */
   async getCustomerSubscriptions(customerId: string): Promise<Square.Subscription[]> {
