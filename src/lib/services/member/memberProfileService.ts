@@ -103,6 +103,12 @@ export async function createProfileForUser(
   return mapMemberDocToDTO(doc);
 }
 
+export async function getMemberProfileById(id: string): Promise<MemberProfileDTO | null> {
+  await dbConnect();
+  const doc = await MemberProfile.findById(id);
+  return doc ? mapMemberDocToDTO(doc) : null;
+}
+
 export async function updateMemberProfileById(
   id: string,
   data: MemberUpdateData

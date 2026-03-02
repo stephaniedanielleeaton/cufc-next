@@ -130,6 +130,32 @@ export class SquareService {
   }
 
   /**
+   * Return orders for a customer from the last 3 months, sorted newest first.
+   */
+  async getRecentOrdersForCustomer(customerId: string): Promise<Square.Order[]> {
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    try {
+      const response = await this.client.orders.search({
+        locationIds: [this.RETAIL_LOCATION_ID],
+        query: {
+          filter: {
+            customerFilter: { customerIds: [customerId] },
+            dateTimeFilter: {
+              createdAt: { startAt: threeMonthsAgo.toISOString() },
+            },
+          },
+          sort: { sortField: "CREATED_AT", sortOrder: "DESC" },
+        },
+      });
+      return response.orders ?? [];
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
    * Get all subscriptions for a Square customer
    */
   async getCustomerSubscriptions(customerId: string): Promise<Square.Subscription[]> {

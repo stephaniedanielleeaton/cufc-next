@@ -45,8 +45,43 @@ function Toggle({
   );
 }
 
+type Transaction = {
+  id?: string;
+  createdAt?: string;
+  state?: string;
+  totalMoney?: { amount?: bigint | number; currency?: string };
+  lineItems: { name?: string; variationName?: string; quantity?: string; totalMoney?: { amount?: bigint | number; currency?: string } }[];
+};
+
+function formatMoney(amount?: bigint | number, currency?: string) {
+  if (amount == null) return "—";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency ?? "USD",
+  }).format(Number(amount) / 100);
+}
+
 export default function MemberDetailsInline({ member, onSubmit, onDelete, saveStatus = "idle" }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showTransactions, setShowTransactions] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[] | null>(null);
+  const [txLoading, setTxLoading] = useState(false);
+
+  const handleLoadTransactions = async () => {
+    if (showTransactions) { setShowTransactions(false); return; }
+    setShowTransactions(true);
+    if (transactions !== null) return;
+    setTxLoading(true);
+    try {
+      const res = await fetch(`/api/admin/members/${member._id}/transactions`);
+      const data = await res.json();
+      setTransactions(data.transactions ?? []);
+    } catch {
+      setTransactions([]);
+    } finally {
+      setTxLoading(false);
+    }
+  };
   const address = member.personalInfo?.address;
   const dobForInput =
     member.personalInfo?.dateOfBirth
@@ -160,6 +195,54 @@ export default function MemberDetailsInline({ member, onSubmit, onDelete, saveSt
                 />
               </div>
             </div>
+          </Section>
+
+          <hr className="border-gray-100" />
+
+          <Section title="Recent Transactions">
+            <button
+              type="button"
+              onClick={handleLoadTransactions}
+              className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              {showTransactions ? "Hide transactions" : "View last 3 months"}
+            </button>
+            {showTransactions && (
+              <div className="mt-3 space-y-2">
+                {txLoading ? (
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="inline-block w-4 h-4 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+                    Loading transactions…
+                  </div>
+                ) : transactions?.length === 0 ? (
+                  <p className="text-sm text-gray-500">No transactions found in the last 3 months.</p>
+                ) : (
+                  transactions?.map((tx) => (
+                    <div key={tx.id} className="rounded-lg border border-gray-100 bg-gray-50 p-3 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">
+                          {tx.createdAt ? new Date(tx.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "—"}
+                        </span>
+                        <span className="text-xs font-semibold text-gray-700">
+                          {formatMoney(tx.totalMoney?.amount, tx.totalMoney?.currency)}
+                        </span>
+                      </div>
+                      <ul className="space-y-0.5">
+                        {tx.lineItems.map((li, i) => (
+                          <li key={i} className="text-sm text-gray-800">
+                            {li.name}{li.variationName ? ` — ${li.variationName}` : ""}
+                            <span className="text-gray-500 ml-1">×{li.quantity}</span>
+                            <span className="float-right text-gray-600 text-xs">
+                              {formatMoney(li.totalMoney?.amount, li.totalMoney?.currency)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </Section>
 
           <hr className="border-gray-100" />
