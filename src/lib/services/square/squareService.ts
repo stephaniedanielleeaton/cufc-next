@@ -1,4 +1,5 @@
 import { SquareClient, Square } from 'square';
+import type { SubscriptionPlanVariationObject } from '@/types/Square/SquareCatalogObjectResponse';
 
 
 /**
@@ -49,7 +50,47 @@ export class SquareService {
   }
 
 
-/**
+  async getInvoiceById(invoiceId: string): Promise<Square.Invoice | null> {
+    try {
+      const response = await this.client.invoices.get({ invoiceId });
+      return response.invoice ?? null;
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  async getSubscriptionPlanVariation(planVariationId: string): Promise<SubscriptionPlanVariationObject | null> {
+    try {
+      const response = await this.client.catalog.object.get({ objectId: planVariationId });
+      if (!response.object) return null;
+      return response.object as unknown as SubscriptionPlanVariationObject;
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all subscriptions for a Square customer
+   */
+  async getCustomerSubscriptions(customerId: string): Promise<Square.Subscription[]> {
+    try {
+      const response = await this.client.subscriptions.search({
+        query: {
+          filter: {
+            customerIds: [customerId],
+          },
+        },
+      });
+      return response.subscriptions ?? [];
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
    * Get Checkout URL for a given catalog object variant ID and member profile ID
    */
   async getSingleVariantCheckout(catalogObjectId: string, memberProfileId: string): Promise<string> {

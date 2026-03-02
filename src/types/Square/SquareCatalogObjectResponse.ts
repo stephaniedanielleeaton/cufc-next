@@ -99,6 +99,30 @@ export interface CatalogObject {
   presentAtAllLocations: boolean;
 }
 
+export interface SubscriptionPhase {
+  uid?: string;
+  cadence?: string;
+  periods?: number;
+  recurringPriceMoney?: Money;
+  ordinal?: number;
+}
+
+export interface SubscriptionPlanVariationData {
+  name: string;
+  phases?: SubscriptionPhase[];
+  subscriptionPlanId?: string;
+}
+
+export interface SubscriptionPlanVariationObject {
+  type: "SUBSCRIPTION_PLAN_VARIATION";
+  id: string;
+  updatedAt?: string;
+  version?: string;
+  isDeleted?: boolean;
+  presentAtAllLocations?: boolean;
+  subscriptionPlanVariationData: SubscriptionPlanVariationData;
+}
+
 export interface SquareCatalogObjectResponse {
-  object: CatalogObject;
+  object: CatalogObject | SubscriptionPlanVariationObject;
 }
