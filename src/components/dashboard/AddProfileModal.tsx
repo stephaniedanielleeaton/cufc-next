@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser } from "@auth0/nextjs-auth0";
 import { useMemberProfile } from "@/context/ProfileContext";
 import type { ProfileRelationship } from "@/lib/models/UserProfileLink";
+
 
 type Props = {
   onClose: () => void;
@@ -15,12 +17,26 @@ const relationshipOptions: { value: ProfileRelationship; label: string; descript
 ];
 
 export function AddProfileModal({ onClose }: Props) {
+  const { user } = useUser();
   const { refreshProfile } = useMemberProfile();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [relationship, setRelationship] = useState<ProfileRelationship>("self");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (relationship === "self" && user) {
+      setFirstName(user.given_name ?? user.name?.split(" ")[0] ?? "");
+      setLastName(user.family_name ?? user.name?.split(" ").slice(1).join(" ") ?? "");
+      setEmail(user.email ?? "");
+    } else if (relationship !== "self") {
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+    }
+  }, [relationship, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +54,7 @@ export function AddProfileModal({ onClose }: Props) {
           relationship,
           displayFirstName: firstName.trim(),
           displayLastName: lastName.trim(),
+          ...(email.trim() ? { personalInfo: { email: email.trim() } } : {}),
         }),
       });
       if (!res.ok) throw new Error("Failed to create profile");
@@ -83,6 +100,17 @@ export function AddProfileModal({ onClose }: Props) {
           </div>
 
           <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-navy"
+              placeholder="jane@example.com"
+            />
+          </div>
+
+          <div>
             <label className="block text-xs font-medium text-gray-600 mb-2">Who is this profile for?</label>
             <div className="space-y-2">
               {relationshipOptions.map((opt) => (
@@ -103,6 +131,11 @@ export function AddProfileModal({ onClose }: Props) {
                   <div>
                     <div className="text-sm font-medium text-gray-800">{opt.label}</div>
                     <div className="text-xs text-gray-500">{opt.description}</div>
+                    {opt.value !== "self" && relationship === opt.value && (
+                      <div className="text-xs text-amber-600 mt-1">
+                        The fencer must be at least 16 years old to participate.
+                      </div>
+                    )}
                   </div>
                 </label>
               ))}

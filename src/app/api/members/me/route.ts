@@ -37,6 +37,7 @@ export async function POST(req: Request) {
     relationship: ProfileRelationship;
     displayFirstName?: string;
     displayLastName?: string;
+    personalInfo?: { email?: string };
   } = await req.json();
 
   if (!body.relationship) {
@@ -46,6 +47,7 @@ export async function POST(req: Request) {
   const profile = await createManagedProfile(auth0Id, body.relationship, {
     displayFirstName: body.displayFirstName,
     displayLastName: body.displayLastName,
+    personalInfo: body.personalInfo,
   });
 
   return NextResponse.json(profile, { status: 201 });

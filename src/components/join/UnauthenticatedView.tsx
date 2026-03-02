@@ -16,7 +16,7 @@ export function UnauthenticatedView() {
         
         <div className="flex justify-center">
           <Link 
-            href={AUTH_LOGIN_PATH}
+            href={`${AUTH_LOGIN_PATH}?returnTo=/dashboard`}
             className="bg-medium-pink hover:bg-dark-red text-white font-bold py-2 px-6 rounded-md transition duration-300"
           >
             Sign In / Create Account

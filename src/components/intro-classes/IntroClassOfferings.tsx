@@ -6,19 +6,57 @@ import { useMemberProfile } from '@/context/ProfileContext';
 import { useUser } from '@auth0/nextjs-auth0';
 import { ClassVariationItem } from './ClassVariationItem';
 import { EnrollButton } from './EnrollButton';
+import ProfileForm from '@/components/profile/ProfileForm';
+import { RedirectingOverlay } from '@/components/common/RedirectingOverlay';
+
+type Step = "class" | "profile";
 
 export const IntroClassOfferings: React.FC = () => {
   const { introClassData, isLoading, error } = useIntroClassOfferings();
   const { user, isLoading: userLoading } = useUser();
   const { profile, loading: profileLoading } = useMemberProfile();
   const [selectedVariationId, setSelectedVariationId] = useState<string | null>(null);
+  const [step, setStep] = useState<Step>("class");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const proceedToCheckout = async () => {
+    if (!selectedVariationId || !profile?.profileId) return;
+    try {
+      setIsProcessing(true);
+      setCheckoutError(null);
+      const response = await fetch('/api/checkout/intro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          catalogObjectId: selectedVariationId,
+          memberProfileId: profile.profileId,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create checkout');
+      setRedirecting(true);
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      setIsProcessing(false);
+      setCheckoutError(err instanceof Error ? err.message : 'An error occurred');
+    }
+  };
+
+  const handleContinue = () => {
+    if (!selectedVariationId) return;
+    if (profile?.profileComplete) {
+      proceedToCheckout();
+    } else {
+      setStep("profile");
+    }
+  };
 
   if (isLoading || userLoading || profileLoading) {
     return (
       <div className="flex justify-center items-center min-h-[300px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-medium-pink"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-medium-pink" />
       </div>
     );
   }
@@ -38,9 +76,34 @@ export const IntroClassOfferings: React.FC = () => {
       </div>
     );
   }
-  
-  const isLoggedIn = !!user;
-  const hasCompleteProfile = !!profile?.profileComplete;
+
+  if (redirecting || isProcessing) {
+    return (
+      <RedirectingOverlay
+        message={redirecting ? "Redirecting to Square checkout…" : "Preparing checkout…"}
+      />
+    );
+  }
+
+  if (step === "profile" && profile) {
+    return (
+      <div className="space-y-4">
+        <div>
+          <button
+            onClick={() => setStep("class")}
+            className="flex items-center text-sm text-navy hover:text-medium-pink transition-colors mb-3"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+            Back to class selection
+          </button>
+          <p className="text-sm text-gray-600">Complete your profile below to finish enrolling.</p>
+        </div>
+        <ProfileForm member={profile} onSaved={proceedToCheckout} />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -64,50 +127,20 @@ export const IntroClassOfferings: React.FC = () => {
         ) : (
           <p className="text-sm text-gray-600">No class dates are available right now.</p>
         )}
-        
         <div className="mt-4">
           <EnrollButton
-            isLoggedIn={isLoggedIn}
-            hasCompleteProfile={hasCompleteProfile}
-            isProcessing={isProcessing}
+            isLoggedIn={!!user}
             hasSelectedVariation={!!selectedVariationId}
-            onEnrollClick={async () => {
-              if (!selectedVariationId || !profile?.profileId) return;
-              try {
-                setIsProcessing(true);
-                setCheckoutError(null);
-                const response = await fetch('/api/checkout/intro', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    catalogObjectId: selectedVariationId,
-                    memberProfileId: profile.profileId,
-                  }),
-                });
-                const data = await response.json();
-                if (!response.ok) {
-                  throw new Error(data.error || 'Failed to create checkout');
-                }
-                window.location.href = data.checkoutUrl;
-              } catch (error) {
-                console.error('Error creating checkout:', error);
-                setCheckoutError(error instanceof Error ? error.message : 'An error occurred');
-              } finally {
-                setIsProcessing(false);
-              }
-            }}
+            label={profile?.profileComplete ? "Enroll Now" : "Continue"}
+            onEnrollClick={handleContinue}
           />
-          {isLoggedIn && hasCompleteProfile && (
+          {!!user && (
             <div className="mt-1">
               {!selectedVariationId && (
-                <p className="text-xs text-center text-gray-500">
-                  Select a class date to continue.
-                </p>
+                <p className="text-xs text-center text-gray-500">Select a class date to continue.</p>
               )}
               {checkoutError && (
-                <p className="text-xs text-center text-red-500 mt-1">
-                  Error: {checkoutError}
-                </p>
+                <p className="text-xs text-center text-red-500 mt-1">Error: {checkoutError}</p>
               )}
             </div>
           )}

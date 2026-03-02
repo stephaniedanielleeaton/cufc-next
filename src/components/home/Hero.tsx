@@ -22,7 +22,7 @@ export default function Hero() {
             </h1>
             <div className="flex flex-col sm:flex-row gap-4">
               <SquareButton 
-                href="/join" 
+                href="/auth/login?returnTo=/dashboard" 
                 variant="transparent"
                 className="mt-2"
                 style={{ 

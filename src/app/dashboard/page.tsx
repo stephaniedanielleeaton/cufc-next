@@ -120,10 +120,7 @@ export default function MemberDashboard() {
               {profile.memberStatus === MemberStatus.Full ? (
                 <DashboardSubscriptionCard memberProfileId={activeProfileId ?? ""} />
               ) : (
-                <DashboardIntroCourseCard 
-                  disabled={!profile.profileComplete} 
-                  onEnroll={handleShowIntroClasses}
-                />
+                <DashboardIntroCourseCard onEnroll={handleShowIntroClasses} />
               )}
             </div>
 

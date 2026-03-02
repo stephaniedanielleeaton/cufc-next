@@ -1,42 +1,15 @@
 "use client";
 
-import { BookOpen, ChevronRight, AlertTriangle } from "lucide-react";
+import { BookOpen, ChevronRight } from "lucide-react";
 
 interface DashboardIntroCourseCardProps {
-  disabled?: boolean;
   onEnroll?: () => void;
 }
 
-export function DashboardIntroCourseCard({ disabled, onEnroll }: DashboardIntroCourseCardProps) {
-  if (disabled) {
-    return (
-      <div className="border border-yellow-300 rounded-lg p-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="bg-yellow-400 text-white p-2 rounded-full">
-            <BookOpen className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-gray-700">Sign Up For An Intro Class</div>
-            <div className="flex items-center text-xs text-red-600 mt-1 gap-1">
-              <AlertTriangle className="w-4 h-4" />
-              Complete your profile to enroll.
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (onEnroll) {
-      e.preventDefault();
-      onEnroll();
-    }
-  };
-
+export function DashboardIntroCourseCard({ onEnroll }: DashboardIntroCourseCardProps) {
   return (
-    <div 
-      onClick={handleClick}
+    <div
+      onClick={onEnroll}
       className="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg p-4 flex items-center justify-between shadow-md transition hover:brightness-105 cursor-pointer"
     >
       <div className="flex items-center gap-3">

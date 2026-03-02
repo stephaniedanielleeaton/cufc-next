@@ -6,7 +6,7 @@ import { MemberProfileFormInput } from "@/types/MemberProfileFormInput";
 import { TextInput } from "@/components/common/TextInput";
 import SaveButton, { SaveStatus } from "@/components/common/SaveButton";
 
-export default function ProfileForm({ member }: { member: MemberProfileFormInput }) {
+export default function ProfileForm({ member, onSaved }: { member: MemberProfileFormInput; onSaved?: () => void }) {
   const { setProfile } = useMemberProfile();
   const [formData, setFormData] = useState<MemberProfileFormInput>(() => ({
     displayFirstName: member.displayFirstName || "",
@@ -39,7 +39,15 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
     if (!formData.personalInfo?.legalFirstName?.trim()) newErrors.legalFirstName = "Legal first name is required.";
     if (!formData.personalInfo?.legalLastName?.trim()) newErrors.legalLastName = "Legal last name is required.";
     if (!formData.personalInfo?.email?.trim()) newErrors.email = "Email is required.";
-    if (!formData.personalInfo?.dateOfBirth?.trim()) newErrors.dateOfBirth = "Date of birth is required.";
+    if (!formData.personalInfo?.dateOfBirth?.trim()) {
+      newErrors.dateOfBirth = "Date of birth is required.";
+    } else {
+      const dob = new Date(formData.personalInfo.dateOfBirth);
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear()
+        - (today < new Date(today.getFullYear(), dob.getMonth(), dob.getDate()) ? 1 : 0);
+      if (age < 16) newErrors.dateOfBirth = "Members must be at least 16 years old to register.";
+    }
     const address = formData.personalInfo?.address || {};
     if (!address.street?.trim()) newErrors.street = "Street is required.";
     if (!address.city?.trim()) newErrors.city = "City is required.";
@@ -110,6 +118,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
       const { data } = await res.json();
       setProfile(data);
       setSaveStatus("saved");
+      onSaved?.();
     } else {
       setSaveStatus("error");
     }
