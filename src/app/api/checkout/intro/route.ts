@@ -6,16 +6,13 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-
     const session = await auth0.getSession();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-
     const body = await req.json();
     const { catalogObjectId, memberProfileId } = body;
-
 
     if (!catalogObjectId || !memberProfileId) {
       return NextResponse.json(
@@ -23,7 +20,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
 
     const squareService = new SquareService();
     const checkoutUrl = await squareService.getSingleVariantCheckout(catalogObjectId, memberProfileId);
@@ -34,7 +30,6 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
-
 
     return NextResponse.json({ checkoutUrl }, { status: 200 });
   } catch (error) {

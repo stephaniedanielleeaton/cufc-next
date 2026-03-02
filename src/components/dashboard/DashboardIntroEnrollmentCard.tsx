@@ -9,9 +9,7 @@ type Props = {
 export function DashboardIntroEnrollmentCard({ enrollment }: Props) {
   return (
     <div className="bg-white rounded-lg shadow-md p-4 space-y-2">
-      <div>
-        <span className="text-sm font-semibold text-gray-800">{enrollment.itemName}</span>
-      </div>
+      <p className="text-sm font-semibold text-gray-800">{enrollment.itemName}</p>
       {enrollment.variationName && (
         <p className="text-sm text-gray-600">{enrollment.variationName}</p>
       )}
