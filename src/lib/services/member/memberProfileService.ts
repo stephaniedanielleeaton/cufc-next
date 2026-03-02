@@ -39,7 +39,6 @@ function mapMemberDocToDTO(doc: HydratedDocument<IMemberProfile>): MemberProfile
       ? doc.lastAttendanceCheckIn.toISOString()
       : null,
     profileComplete: doc.profileComplete,
-    checkedIn: doc.checkedIn,
     memberStatus: doc.memberStatus,
     squareCustomerId: doc.squareCustomerId,
     createdAt: doc.createdAt?.toISOString(),

@@ -41,7 +41,6 @@ export type MemberProfileDTO = {
   notes?: string;
   lastAttendanceCheckIn?: string | null;
   profileComplete?: boolean;
-  checkedIn?: boolean;
   memberStatus?: MemberStatus;
   squareCustomerId?: string;
   createdAt?: string;

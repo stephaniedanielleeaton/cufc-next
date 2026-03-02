@@ -72,7 +72,6 @@ export interface IMemberProfile extends Document {
   notes?: string;
   lastAttendanceCheckIn?: Date;
   profileComplete?: boolean;
-  checkedIn?: boolean;
   memberStatus?: MemberStatus;
   createdAt?: Date;
   updatedAt?: Date;
@@ -92,7 +91,6 @@ const MemberProfileSchema = new Schema<IMemberProfile>({
   lastAttendanceCheckIn: Date,
   memberStatus: { type: String, enum: ['New', 'Full'], default: 'New' },
   profileComplete: { type: Boolean, default: false },
-  checkedIn: { type: Boolean, default: false },
   squareCustomerId: String,
 }, { timestamps: true });
 
