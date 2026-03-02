@@ -47,6 +47,7 @@ export type MemberProfileDTO = {
   updatedAt?: string;
   subscriptionStatus?: string;
   isSubscriptionActive?: boolean;
+  hasPaidDropInToday?: boolean;
   role?: string;
 };
 

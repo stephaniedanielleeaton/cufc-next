@@ -72,6 +72,37 @@ export class SquareService {
   }
 
   /**
+   * Return the set of customer IDs who purchased the given catalog item today (UTC calendar day).
+   */
+  async getTodayDropInCustomerIds(catalogObjectId: string): Promise<Set<string>> {
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    try {
+      const response = await this.client.orders.search({
+        locationIds: [this.RETAIL_LOCATION_ID],
+        query: {
+          filter: {
+            dateTimeFilter: {
+              createdAt: { startAt: startOfDay.toISOString() },
+            },
+          },
+        },
+      });
+      const customerIds = new Set<string>();
+      for (const order of response.orders ?? []) {
+        const hasItem = order.lineItems?.some(
+          (li) => li.catalogObjectId === catalogObjectId
+        );
+        if (hasItem && order.customerId) customerIds.add(order.customerId);
+      }
+      return customerIds;
+    } catch (error) {
+      this.logError(error as string);
+      throw error;
+    }
+  }
+
+  /**
    * Return the set of customer IDs that have at least one ACTIVE subscription.
    * Uses a single Square API call for the entire list.
    */

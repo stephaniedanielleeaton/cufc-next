@@ -22,7 +22,10 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
 
   const isSubscribed =
     memberWithExtras.subscriptionStatus === "Active" || memberWithExtras.isSubscriptionActive;
+  const hasPaidDropIn = !!member.hasPaidDropInToday;
   const role = memberWithExtras.role;
+  const isCoach = role === "coach";
+  const hasActiveAccess = isSubscribed || isCoach || hasPaidDropIn;
 
   let checkInDate: Date | undefined = undefined;
   if (lastCheckIn) {
@@ -30,22 +33,21 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
   }
   const notes = member.notes;
 
-  // Desktop/tablet status icon (keeps green check)
-  const subIcon =
-    isSubscribed || (role && role === "coach") ? (
-      <i className="fas fa-check-circle text-green-500 text-xl" title="Active subscription" />
-    ) : (
-      <i
-        className="fas fa-exclamation-circle text-red-500 text-xl"
-        title="Not subscribed"
-        aria-label="Not subscribed"
-      />
-    );
+  const subIcon = hasActiveAccess ? (
+    <i className="fas fa-check-circle text-green-500 text-xl" title="Active subscription" />
+  ) : (
+    <i
+      className="fas fa-exclamation-circle text-red-500 text-xl"
+      title="Not subscribed"
+      aria-label="Not subscribed"
+    />
+  );
 
-  // Mobile: only show alert icons (no green check)
   const mobileAlertIcons = (
     <div className="flex items-center gap-2">
-      {!isSubscribed && (
+      {hasActiveAccess ? (
+        <i className="fas fa-check-circle text-green-500 text-lg" title="Active subscription" />
+      ) : (
         <i
           className="fas fa-exclamation-circle text-red-500 text-lg"
           title="Not subscribed"
@@ -85,8 +87,10 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
           </div>
         </div>
 
-        {/* Only show this line on mobile when NOT subscribed */}
-        {!isSubscribed && (
+        {hasPaidDropIn && (
+          <div className="text-sm text-green-600 font-medium">Paid drop-in fee today</div>
+        )}
+        {!hasActiveAccess && (
           <div className="text-sm text-gray-600">Not enrolled in a monthly plan</div>
         )}
       </div>
@@ -103,7 +107,11 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, lastCheckIn, onToggle, 
         <div className="flex-1 min-w-0">
           <div className="text-sm text-gray-600">Subscription Status</div>
           <div className="text-base text-gray-900">
-            {!isSubscribed ? "Not enrolled in a monthly plan" : "Active"}
+            {hasPaidDropIn
+              ? "Paid drop-in fee today"
+              : isSubscribed
+              ? "Active"
+              : "Not enrolled in a monthly plan"}
           </div>
         </div>
 
