@@ -9,6 +9,7 @@ import type { MemberProfileDTO } from "@/types/MemberProfile";
 
 export default function MembersPage() {
   const [search, setSearch] = useState("");
+  const [checkedInOnly, setCheckedInOnly] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
@@ -25,15 +26,21 @@ export default function MembersPage() {
     return map;
   }, [attendanceData]);
 
+  const todayStr = new Date().toDateString();
+
   const filtered: MemberProfileDTO[] = useMemo(() => {
     const members: MemberProfileDTO[] = data?.members || [];
     const q = search.toLowerCase();
     return members.filter((m) => {
       const first = m.displayFirstName || "";
       const last = m.displayLastName || "";
-      return `${first} ${last}`.toLowerCase().includes(q);
+      const matchesSearch = `${first} ${last}`.toLowerCase().includes(q);
+      const lastCheckIn = lastCheckInMap[String(m._id)];
+      const isCheckedInToday = !!lastCheckIn && new Date(lastCheckIn).toDateString() === todayStr;
+      const matchesCheckedIn = !checkedInOnly || isCheckedInToday;
+      return matchesSearch && matchesCheckedIn;
     });
-  }, [data, search]);
+  }, [data, search, checkedInOnly, lastCheckInMap, todayStr]);
 
   const handleToggle = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -95,8 +102,21 @@ export default function MembersPage() {
 
   return (
     <div>
-      <div className="max-w-md mx-auto mb-6">
-        <SearchBox searchQuery={search} onSearchChange={(e) => setSearch(e.target.value)} />
+      <div className="max-w-2xl mx-auto mb-6 flex flex-col md:flex-row gap-3 items-start md:items-center">
+        <div className="flex-1">
+          <SearchBox searchQuery={search} onSearchChange={(e) => setSearch(e.target.value)} />
+        </div>
+        <button
+          onClick={() => setCheckedInOnly((prev) => !prev)}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg border transition-colors whitespace-nowrap ${
+            checkedInOnly
+              ? "bg-gray-200 text-gray-700 border-gray-400"
+              : "bg-white text-gray-500 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+          }`}
+        >
+          {checkedInOnly && <i className="fas fa-check text-xs" />}
+          Show checked in
+        </button>
       </div>
 
       <div className="space-y-4">
