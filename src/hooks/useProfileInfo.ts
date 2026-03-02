@@ -11,13 +11,17 @@ export function useProfileInfo() {
         const res = await fetch("/api/members/me");
         if (res.ok) {
           const data = await res.json();
+          const primary = (data.profiles ?? []).find(
+            (p: { _id: string; displayFirstName?: string; displayLastName?: string; profileComplete?: boolean }) =>
+              String(p._id) === data.primaryProfileId
+          ) ?? data.profiles?.[0] ?? null;
           let displayName = null;
-          if (data.displayFirstName || data.displayLastName) {
-            displayName = `${data.displayFirstName ?? ''} ${data.displayLastName ?? ''}`.trim();
+          if (primary?.displayFirstName || primary?.displayLastName) {
+            displayName = `${primary.displayFirstName ?? ''} ${primary.displayLastName ?? ''}`.trim();
           }
           setProfileInfo({
-            displayName: displayName,
-            profileComplete: data.profileComplete ?? true,
+            displayName,
+            profileComplete: primary?.profileComplete ?? true,
           });
         }
       } catch {

@@ -18,9 +18,9 @@ const statusLabel: Record<ActiveSubscriptionStatus, string> = {
   PAUSED: "Paused",
 };
 
-export function DashboardSubscriptionCard() {
+export function DashboardSubscriptionCard({ memberProfileId }: { memberProfileId: string }) {
   const { data: subscriptions, isLoading } = useSWR<MemberSubscriptionDTO[]>(
-    "/api/members/me/subscriptions",
+    memberProfileId ? `/api/members/me/subscriptions?memberProfileId=${memberProfileId}` : null,
     fetcher
   );
 

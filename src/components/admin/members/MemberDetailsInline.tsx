@@ -1,12 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import type { MemberProfileDTO } from "@/types/MemberProfile";
 import { TextInput } from "@/components/common/TextInput";
 import { Dropdown } from "@/components/common/Dropdown";
 import SaveButton, { SaveStatus } from "@/components/common/SaveButton";
 
-type Props = { member: MemberProfileDTO; onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void; saveStatus?: SaveStatus };
+type Props = {
+  member: MemberProfileDTO;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  onDelete?: () => void;
+  saveStatus?: SaveStatus;
+};
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -40,7 +45,8 @@ function Toggle({
   );
 }
 
-export default function MemberDetailsInline({ member, onSubmit, saveStatus = "idle" }: Props) {
+export default function MemberDetailsInline({ member, onSubmit, onDelete, saveStatus = "idle" }: Props) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const address = member.personalInfo?.address;
   const dobForInput =
     member.personalInfo?.dateOfBirth
@@ -175,7 +181,36 @@ export default function MemberDetailsInline({ member, onSubmit, saveStatus = "id
           </Section>
         </div>
 
-        <div className="px-4 sm:px-6 pb-5 flex justify-end">
+        <div className="px-4 sm:px-6 pb-5 flex items-center justify-between">
+          {onDelete && (
+            confirmDelete ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Delete this member?</span>
+                <button
+                  type="button"
+                  onClick={onDelete}
+                  className="px-3 py-1.5 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Confirm
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmDelete(false)}
+                  className="px-3 py-1.5 text-sm font-semibold rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                className="px-3 py-1.5 text-sm font-semibold rounded-lg border border-red-300 text-red-600 hover:bg-red-50 transition-colors"
+              >
+                Delete member
+              </button>
+            )
+          )}
           <SaveButton saveStatus={saveStatus} />
         </div>
       </div>

@@ -10,15 +10,42 @@ import { MemberStatus } from "@/types/MemberStatus";
 import { useState } from "react";
 import { IntroClassOfferings } from "@/components/intro-classes/IntroClassOfferings";
 import ProfileForm from "@/components/profile/ProfileForm";
+import { ProfileSwitcher } from "@/components/dashboard/ProfileSwitcher";
+import { AddProfileModal } from "@/components/dashboard/AddProfileModal";
 
 export default function MemberDashboard() {
-  const { profile, loading, error } = useMemberProfile();
+  const { profile, profiles, activeProfileId, loading, error } = useMemberProfile();
   const [showIntroClasses, setShowIntroClasses] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [showAddProfile, setShowAddProfile] = useState(false);
 
   if (loading) return <div className="p-6">Loading...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
-  if (!profile) return <div className="p-6 text-red-600">No profile found.</div>;
+
+  if (profiles.length === 0) {
+    return (
+      <div className="bg-gray-50 min-h-screen py-10">
+        <div className="max-w-md mx-auto px-4">
+          <div className="bg-white rounded-xl shadow-md p-8 text-center space-y-4">
+            <h2 className="text-xl font-bold text-gray-800">Welcome!</h2>
+            <p className="text-sm text-gray-500">
+              Get started by creating a profile for the fencer you&apos;re registering.
+              You can add profiles for yourself, a child, or another family member.
+            </p>
+            <button
+              onClick={() => setShowAddProfile(true)}
+              className="px-6 py-2.5 bg-navy text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              Create a profile
+            </button>
+          </div>
+        </div>
+        {showAddProfile && <AddProfileModal onClose={() => setShowAddProfile(false)} />}
+      </div>
+    );
+  }
+
+  if (!profile) return null;
 
   const dropInDisabled = !profile.profileComplete || profile.memberStatus === MemberStatus.New;
   const dropInDisabledReason = !profile.profileComplete
@@ -45,6 +72,7 @@ export default function MemberDashboard() {
   return (
     <div className="bg-gray-50 min-h-screen py-10">
       <div className="max-w-md mx-auto px-4 space-y-6">
+        <ProfileSwitcher />
         <DashboardHeaderCard 
           profile={profile} 
           onEditProfile={handleShowProfileEdit}
@@ -90,7 +118,7 @@ export default function MemberDashboard() {
                 Class Enrollment
               </h2>
               {profile.memberStatus === MemberStatus.Full ? (
-                <DashboardSubscriptionCard />
+                <DashboardSubscriptionCard memberProfileId={activeProfileId ?? ""} />
               ) : (
                 <DashboardIntroCourseCard 
                   disabled={!profile.profileComplete} 
@@ -121,7 +149,7 @@ export default function MemberDashboard() {
               <h2 className="text-sm font-semibold tracking-wide px-1">
                 Last Check-in
               </h2>
-              <LastCheckInCard />
+              <LastCheckInCard memberProfileId={activeProfileId ?? ""} />
             </div>
           </>
         )}

@@ -46,6 +46,17 @@ export default function MembersPage() {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/members/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      setExpandedId(null);
+      await mutate();
+    } catch {
+      alert("Failed to delete member. Please try again.");
+    }
+  };
+
   const handleSave = (id: string) => async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -135,7 +146,12 @@ export default function MembersPage() {
 
               {expanded && (
                 <div className="mt-2">
-                  <MemberDetailsInline member={member} onSubmit={handleSave(id)} saveStatus={saveStatus} />
+                  <MemberDetailsInline
+                    member={member}
+                    onSubmit={handleSave(id)}
+                    onDelete={() => handleDelete(id)}
+                    saveStatus={saveStatus}
+                  />
                 </div>
               )}
             </div>

@@ -103,7 +103,7 @@ export default function ProfileForm({ member }: { member: MemberProfileFormInput
     const res = await fetch("/api/members/me/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dataToSend),
+      body: JSON.stringify({ profileId: member.profileId, data: dataToSend }),
     });
 
     if (res.ok) {

@@ -1,20 +1,38 @@
+import { NextRequest, NextResponse } from "next/server";
 import { auth0 } from "@/lib/auth/auth0";
-import { NextResponse } from "next/server";
-import { findOrCreateMemberProfile } from "@/lib/services/member/memberProfileService";
+import { dbConnect } from "@/lib/mongoose";
+import { MemberProfile, IMemberProfile } from "@/lib/models/MemberProfile";
+import { UserProfileLink } from "@/lib/models/UserProfileLink";
 import { getMemberSubscriptions } from "@/lib/services/square/subscriptionService";
+import { Types } from "mongoose";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await auth0.getSession();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const member = await findOrCreateMemberProfile(session.user);
-
-  if (!member.squareCustomerId) {
+  const memberProfileId = request.nextUrl.searchParams.get("memberProfileId");
+  if (!memberProfileId) {
     return NextResponse.json([]);
   }
 
-  const subscriptions = await getMemberSubscriptions(member.squareCustomerId);
+  await dbConnect();
+
+  const auth0Id = session.user.sub as string;
+  const link = await UserProfileLink.findOne({
+    auth0Id,
+    profileId: new Types.ObjectId(memberProfileId),
+  });
+  if (!link) {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+
+  const member = await MemberProfile.findById(memberProfileId).lean<IMemberProfile>();
+  if (!member?.squareCustomerId) {
+    return NextResponse.json([]);
+  }
+
+  const subscriptions = await getMemberSubscriptions(member.squareCustomerId as string);
   return NextResponse.json(subscriptions);
 }

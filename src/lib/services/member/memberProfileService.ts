@@ -1,6 +1,5 @@
 import { HydratedDocument } from "mongoose";
 import { MemberProfile, IMemberProfile } from "@/lib/models/MemberProfile";
-import { Auth0User } from "@/types/Auth0User";
 import { MemberProfileDTO, MemberUpdateData } from "@/types/MemberProfile";
 import { dbConnect } from "@/lib/mongoose";
 
@@ -8,10 +7,9 @@ function toISODateString(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-function mapMemberDocToDTO(doc: HydratedDocument<IMemberProfile>): MemberProfileDTO {
+export function mapMemberDocToDTO(doc: HydratedDocument<IMemberProfile>): MemberProfileDTO {
   return {
     _id: doc.id as string,
-    auth0Id: doc.auth0Id,
     displayFirstName: doc.displayFirstName,
     displayLastName: doc.displayLastName,
     personalInfo: doc.personalInfo
@@ -77,39 +75,6 @@ function buildMemberMongoUpdateSet(data: MemberUpdateData) {
   };
 }
 
-export async function findOrCreateMemberProfile(auth0User: Auth0User): Promise<MemberProfileDTO> {
-  await dbConnect();
-  const auth0Id = auth0User.sub;
-
-  let profile = await MemberProfile.findOne({ auth0Id });
-
-  if (!profile && auth0User.email) {
-    const pendingProfile = await MemberProfile.findOne({
-      "personalInfo.email": auth0User.email,
-      auth0Id: { $regex: /^pending:/ },
-    });
-
-    if (pendingProfile) {
-      profile = await MemberProfile.findByIdAndUpdate(
-        pendingProfile._id,
-        { $set: { auth0Id } },
-        { new: true }
-      );
-    }
-  }
-
-  if (!profile) {
-    profile = await MemberProfile.create({
-      auth0Id,
-      displayFirstName: auth0User.given_name || auth0User.name?.split(" ")[0],
-      displayLastName: auth0User.family_name || auth0User.name?.split(" ")[1],
-      personalInfo: { email: auth0User.email },
-    });
-  }
-
-  return mapMemberDocToDTO(profile);
-}
-
 export async function getAllMemberProfiles(): Promise<MemberProfileDTO[]> {
   await dbConnect();
   const profiles = await MemberProfile.find({});
@@ -135,15 +100,3 @@ export async function updateMemberProfileById(
   return updated ? mapMemberDocToDTO(updated) : null;
 }
 
-export async function updateMemberProfileByAuth0Id(
-  auth0Id: string,
-  data: MemberUpdateData
-): Promise<MemberProfileDTO | null> {
-  await dbConnect();
-  const updated = await MemberProfile.findOneAndUpdate(
-    { auth0Id },
-    { $set: buildMemberMongoUpdateSet(data) },
-    { new: true }
-  );
-  return updated ? mapMemberDocToDTO(updated) : null;
-}

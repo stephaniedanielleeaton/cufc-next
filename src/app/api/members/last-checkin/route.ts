@@ -1,20 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth0 } from "@/lib/auth/auth0";
 import { dbConnect } from "@/lib/mongoose";
 import { Attendance } from "@/lib/models/Attendance";
-import { MemberProfile } from "@/lib/models/MemberProfile";
 
-async function getMemberProfileByAuth0Id(auth0Id: string) {
-  return MemberProfile.findOne({ auth0Id });
-}
-
-async function getLastAttendanceByMemberId(memberId: string) {
-  return Attendance.findOne({ userId: memberId })
-    .sort({ timestamp: -1 })
-    .lean();
-}
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await dbConnect();
     const session = await auth0.getSession();
@@ -22,22 +11,20 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const auth0Id = session.user.sub;
-    const memberProfile = await getMemberProfileByAuth0Id(auth0Id);
-    if (!memberProfile) {
+    const memberProfileId = request.nextUrl.searchParams.get("memberProfileId");
+    if (!memberProfileId) {
       return NextResponse.json({ lastCheckIn: null });
     }
 
-    const lastCheckIn = await getLastAttendanceByMemberId(memberProfile._id.toString());
+    const lastCheckIn = await Attendance.findOne({ userId: memberProfileId })
+      .sort({ timestamp: -1 })
+      .lean();
+
     if (!lastCheckIn) {
       return NextResponse.json({ lastCheckIn: null });
     }
 
-    return NextResponse.json({
-      lastCheckIn: {
-        timestamp: lastCheckIn.timestamp
-      },
-    });
+    return NextResponse.json({ lastCheckIn: { timestamp: lastCheckIn.timestamp } });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

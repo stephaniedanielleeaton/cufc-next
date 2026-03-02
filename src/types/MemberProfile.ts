@@ -30,7 +30,6 @@ export type Guardian = {
 
 export type MemberProfileDTO = {
   _id: string;
-  auth0Id: string;
   displayFirstName?: string;
   displayLastName?: string;
   personalInfo?: PersonalInfo;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 
-export function LastCheckInCard() {
+export function LastCheckInCard({ memberProfileId }: { memberProfileId: string }) {
   const [lastCheckIn, setLastCheckIn] = useState<null | { timestamp: string }>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,7 +13,7 @@ export function LastCheckInCard() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("/api/members/last-checkin");
+        const res = await fetch(`/api/members/last-checkin?memberProfileId=${memberProfileId}`);
         const data = await res.json();
         if (res.ok && data.lastCheckIn) {
           setLastCheckIn(data.lastCheckIn);
@@ -27,7 +27,7 @@ export function LastCheckInCard() {
       }
     }
     fetchLastCheckIn();
-  }, []);
+  }, [memberProfileId]);
 
   let content;
   if (loading) {

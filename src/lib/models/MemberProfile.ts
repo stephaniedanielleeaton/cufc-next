@@ -61,7 +61,6 @@ export interface IFamilyMember {
 }
 
 export interface IMemberProfile extends Document {
-  auth0Id: string;
   displayFirstName?: string;
   displayLastName?: string;
   personalInfo?: IPersonalInfo;
@@ -79,7 +78,6 @@ export interface IMemberProfile extends Document {
 }
 
 const MemberProfileSchema = new Schema<IMemberProfile>({
-  auth0Id: { type: String, required: true, unique: true },
   displayFirstName: String,
   displayLastName: String,
   personalInfo: PersonalInfoSchema,
