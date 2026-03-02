@@ -6,6 +6,7 @@ export interface MemberProfileFormInput {
     displayLastName?: string;
     profileComplete?: boolean;
     memberStatus?: MemberStatus;
+    squareCustomerId?: string;
     personalInfo?: {
       legalFirstName?: string;
       legalLastName?: string;

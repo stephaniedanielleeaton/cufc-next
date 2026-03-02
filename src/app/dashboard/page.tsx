@@ -7,14 +7,16 @@ import { DashboardToolCard } from "../../components/dashboard/DashboardToolCard"
 import { LastCheckInCard } from "../../components/dashboard/LastCheckInCard";
 import { DashboardIntroCourseCard } from "../../components/dashboard/DashboardIntroCourseCard";
 import { MemberStatus } from "@/types/MemberStatus";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IntroClassOfferings } from "@/components/intro-classes/IntroClassOfferings";
 import ProfileForm from "@/components/profile/ProfileForm";
 import { ProfileSwitcher } from "@/components/dashboard/ProfileSwitcher";
 import { AddProfileModal } from "@/components/dashboard/AddProfileModal";
 
 export default function MemberDashboard() {
-  const { profile, profiles, activeProfileId, loading, error } = useMemberProfile();
+  const { profile, profiles, activeProfileId, loading, error, refreshProfile } = useMemberProfile();
+
+  useEffect(() => { refreshProfile(); }, [refreshProfile]);
   const [showIntroClasses, setShowIntroClasses] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [showAddProfile, setShowAddProfile] = useState(false);

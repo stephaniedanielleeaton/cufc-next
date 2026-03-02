@@ -1,49 +1,34 @@
-import { MemberProfile } from "@/lib/models/MemberProfile";
 import { SquareService } from "./squareService";
 
-export interface SyncSquareCustomerIdsResult {
-  processed: number;
-  linked: number;
-  notFound: number;
-  ambiguous: number;
-  errors: number;
+export interface ProfileToSync {
+  id: string;
+  email: string;
 }
 
-export async function syncSquareCustomerIds(): Promise<SyncSquareCustomerIdsResult> {
+export interface SquareSyncResult {
+  linked: Array<{ id: string; squareCustomerId: string }>;
+  notFound: string[];
+  ambiguous: Array<{ id: string; count: number }>;
+  errors: string[];
+}
+
+export async function syncSquareCustomerIds(profiles: ProfileToSync[]): Promise<SquareSyncResult> {
   const squareService = new SquareService();
-  const result: SyncSquareCustomerIdsResult = { processed: 0, linked: 0, notFound: 0, ambiguous: 0, errors: 0 };
-
-  const profiles = await MemberProfile.find({
-    squareCustomerId: { $in: [null, undefined, ""] },
-    "personalInfo.email": { $exists: true, $ne: "" },
-  }).select("_id personalInfo.email").lean();
-
-  result.processed = profiles.length;
+  const result: SquareSyncResult = { linked: [], notFound: [], ambiguous: [], errors: [] };
 
   for (const profile of profiles) {
-    const email = (profile as { personalInfo?: { email?: string } }).personalInfo?.email;
-    if (!email) continue;
-
     try {
-      const customers = await squareService.searchCustomersByEmail(email);
+      const customers = await squareService.searchCustomersByEmail(profile.email);
 
       if (customers.length === 0) {
-        result.notFound++;
+        result.notFound.push(profile.id);
       } else if (customers.length === 1) {
-        await MemberProfile.updateOne(
-          { _id: profile._id },
-          { $set: { squareCustomerId: customers[0].id } }
-        );
-        result.linked++;
+        result.linked.push({ id: profile.id, squareCustomerId: customers[0].id! });
       } else {
-        console.warn(
-          `[sync-square-customers] Ambiguous: ${customers.length} Square customers found for email "${email}" (profile ${profile._id}). Skipping — resolve manually.`
-        );
-        result.ambiguous++;
+        result.ambiguous.push({ id: profile.id, count: customers.length });
       }
-    } catch (err) {
-      console.error(`Failed to sync Square customer for profile ${profile._id}:`, err);
-      result.errors++;
+    } catch {
+      result.errors.push(profile.id);
     }
   }
 

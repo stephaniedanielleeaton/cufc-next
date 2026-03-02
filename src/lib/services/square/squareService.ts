@@ -91,7 +91,7 @@ export class SquareService {
   }
 
   /**
-   * Search for a Square customer by exact email address. Returns the first match or null.
+   * Search for Square customers by exact email address. Returns all matches.
    */
   async searchCustomersByEmail(email: string): Promise<Square.Customer[]> {
     try {

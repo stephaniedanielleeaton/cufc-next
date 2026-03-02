@@ -78,6 +78,18 @@ export function MemberProfileProvider({ children }: { children: ReactNode }) {
     if (active) setProfile(toFormInput(active));
   }, [activeProfileId, profiles]);
 
+  useEffect(() => {
+    if (!profile?.profileId || profile.squareCustomerId || !profile.personalInfo?.email) return;
+    fetch("/api/members/me/sync-square", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ memberProfileId: profile.profileId }),
+    })
+      .then((res) => res.json())
+      .then((data) => { if (data.status === "linked") fetchProfile(); })
+      .catch(() => {});
+  }, [profile?.profileId, profile?.squareCustomerId, fetchProfile]);
+
   return (
     <MemberProfileContext.Provider
       value={{

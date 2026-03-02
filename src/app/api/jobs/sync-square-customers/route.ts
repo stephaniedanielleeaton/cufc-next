@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongoose";
-import { syncSquareCustomerIds } from "@/lib/services/square/syncSquareCustomerIds";
+import { syncMissingSquareCustomerIds } from "@/lib/services/member/memberSquareSyncService";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
   try {
     await dbConnect();
-    const result = await syncSquareCustomerIds();
+    const result = await syncMissingSquareCustomerIds();
     console.log("[sync-square-customers]", result);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
