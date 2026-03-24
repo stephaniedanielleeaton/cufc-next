@@ -75,8 +75,8 @@ function mapMemberToProfile(member, auth0Id) {
     isWaiverOnFile: member.is_waiver_on_file ?? false,
     notes: member.notes || undefined,
     squareCustomerId: member.square_customer_id || undefined,
-    memberStatus: "New",
-    profileComplete: false,
+    memberStatus: "Full",
+    profileComplete: true,
     isPaymentWaived: false,
   };
 }
@@ -105,16 +105,16 @@ async function migrate() {
     for (const member of members) {
       const email = member.personal_info?.email;
 
-      // Resolve auth0Id from users collection by email, or use pending placeholder
+      // Resolve auth0Id from users collection by email, or leave blank
       const user = email ? await usersCol.findOne({ email }) : null;
-      const auth0Id = user?.auth0Id ?? (email ? `pending:${email}` : `pending:id:${member._id}`);
+      const auth0Id = user?.auth0Id ?? null;
 
       const profile = mapMemberToProfile(member, auth0Id);
       await profilesCol.insertOne(profile);
 
-      if (auth0Id.startsWith("pending:")) {
+      if (auth0Id) {
         console.log(
-          `MIGRATED (pending) [${member.display_first_name} ${member.display_last_name}] — id: ${member._id}`
+          `MIGRATED (linked) [${member.display_first_name} ${member.display_last_name}] — id: ${member._id}`
         );
       } else {
         console.log(
